@@ -126,37 +126,9 @@ function addTitleGlow() {
 // Inicializar todas las animaciones cuando cargue la página
 document.addEventListener('DOMContentLoaded', () => {
     createParticles();
-    createCursorEffect();
     observeSections();
     addTitleGlow();
-    
-    // Agregar clase de carga
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '1';
-    }, 100);
-});
-
-// Efecto parallax suave en scroll
-let ticking = false;
-
-function updateParallax() {
-    const scrolled = window.pageYOffset;
-    const parallaxElements = document.querySelectorAll('section');
-    
-    parallaxElements.forEach((element, index) => {
-        const speed = 0.5 + (index * 0.1);
-        const yPos = -(scrolled * speed / 10);
-        element.style.transform = `translateY(${yPos}px)`;
-    });
-    
-    ticking = false;
-}
-
-window.addEventListener('scroll', () => {
-    if (!ticking) {
-        window.requestAnimationFrame(updateParallax);
-        ticking = true;
-    }
+    // El efecto de cursor puede ser algo pesado, lo comento para priorizar la fluidez.
+    // Si deseas mantenerlo, simplemente descomenta la siguiente línea.
+    // createCursorEffect();
 });
