@@ -122,7 +122,13 @@ nav ul li a:hover {
 main {
     max-width: 1200px;
     margin: 3rem auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+    main {
+        padding: 0 2rem;
+    }
 }
 
 section {
@@ -135,6 +141,7 @@ section {
     border: 2px solid rgba(255, 255, 255, 0.2);
     animation: fadeInUp 0.6s ease-out;
     transition: transform 0.3s ease;
+    overflow: hidden;
 }
 
 section:hover {
@@ -211,21 +218,25 @@ img {
     max-width: 100%;
     width: 100%;
     height: auto;
-    margin: 2rem auto;
+    margin: 1.5rem auto;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease;
+    object-fit: contain;
 }
 
 @media (min-width: 500px) {
     img {
         max-width: 400px;
         width: auto;
+        margin: 2rem auto;
     }
 }
 
-img:hover {
-    transform: scale(1.05) rotate(2deg);
+@media (hover: hover) {
+    img:hover {
+        transform: scale(1.05) rotate(2deg);
+    }
 }
 
 a {
@@ -939,11 +950,13 @@ input[type="range"]::-moz-range-thumb:hover {
 @media (max-width: 768px) {
     header h1 {
         font-size: 1.8rem;
+        padding: 0 1rem;
     }
     
     nav ul {
         flex-wrap: wrap;
         gap: 0.5rem;
+        padding: 0 0.5rem;
     }
     
     nav ul li a {
@@ -952,24 +965,38 @@ input[type="range"]::-moz-range-thumb:hover {
     }
     
     section {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 15px;
     }
     
     h2 {
         font-size: 1.5rem;
+        word-wrap: break-word;
     }
 
     .container {
-        padding: 0 1rem;
+        padding: 0 0.75rem;
+        margin: 2rem auto;
     }
 
     .config-section {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
     }
 
     .config-section button {
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
+    }
+    
+    /* Mejorar espaciado en móvil */
+    .tematicas-grid {
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .slider-value {
+        font-size: 2.5rem;
     }
 }
 
