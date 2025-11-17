@@ -208,12 +208,20 @@ section ul li:hover {
 
 img {
     display: block;
-    max-width: 400px;
+    max-width: 100%;
+    width: 100%;
     height: auto;
     margin: 2rem auto;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease;
+}
+
+@media (min-width: 500px) {
+    img {
+        max-width: 400px;
+        width: auto;
+    }
 }
 
 img:hover {
@@ -414,11 +422,12 @@ footer p {
 .config-section input[type="text"] {
     width: 100%;
     padding: 1rem 1.5rem;
-    font-size: 1.1rem;
+    font-size: 16px; /* Prevent zoom on iOS */
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
     transition: all 0.3s ease;
     outline: none;
     margin-bottom: 1.5rem;
@@ -426,7 +435,12 @@ footer p {
     -webkit-appearance: none;
     appearance: none;
     -webkit-tap-highlight-color: transparent;
-    font-size: 16px; /* Prevent zoom on iOS */
+}
+
+.config-section input[type="number"]:focus,
+.config-section input[type="text"]:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 /* Estilos para el slider */
@@ -465,12 +479,14 @@ input[type="range"]::-webkit-slider-thumb {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #ffd700;
+    background: #ffd700 !important;
+    background-color: #ffd700 !important;
     cursor: pointer;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
     transition: all 0.3s ease;
     /* iOS touch target size */
     -webkit-tap-highlight-color: transparent;
+    border: none;
 }
 
 input[type="range"]::-webkit-slider-thumb:active {
@@ -548,10 +564,11 @@ input[type="range"]::-moz-range-thumb:hover {
 .config-section button {
     padding: 1rem 2.5rem;
     font-size: 1.2rem;
-    background: rgba(78, 205, 196, 0.3);
+    background: rgba(78, 205, 196, 0.3) !important;
+    background-color: rgba(78, 205, 196, 0.3) !important;
     border: 2px solid rgba(78, 205, 196, 0.5);
     border-radius: 15px;
-    color: #fff;
+    color: #fff !important;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -566,14 +583,16 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .config-section button:hover {
-    background: rgba(78, 205, 196, 0.6);
+    background: rgba(78, 205, 196, 0.6) !important;
+    background-color: rgba(78, 205, 196, 0.6) !important;
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0 8px 20px rgba(78, 205, 196, 0.4);
 }
 
 .config-section button:active {
     transform: scale(0.98);
-    background: rgba(78, 205, 196, 0.7);
+    background: rgba(78, 205, 196, 0.7) !important;
+    background-color: rgba(78, 205, 196, 0.7) !important;
 }
 
 .button-group {
@@ -736,7 +755,8 @@ input[type="range"]::-moz-range-thumb:hover {
     display: block;
     width: 60px;
     height: 30px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2) !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
     border-radius: 30px;
     transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -756,7 +776,8 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .toggle-switch input[type="checkbox"]:checked + .toggle-slider {
-    background: #4ecdc4;
+    background: #4ecdc4 !important;
+    background-color: #4ecdc4 !important;
     border-color: #4ecdc4;
     box-shadow: 0 0 15px rgba(78, 205, 196, 0.4);
 }
@@ -776,10 +797,11 @@ input[type="range"]::-moz-range-thumb:hover {
     padding: 1rem 2rem;
     font-size: 1.5rem;
     font-weight: bold;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
-    color: #fff;
+    color: #fff !important;
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 70px;
@@ -802,7 +824,8 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .btn-impostor.active {
-    background: rgba(255, 107, 107, 0.5);
+    background: rgba(255, 107, 107, 0.5) !important;
+    background-color: rgba(255, 107, 107, 0.5) !important;
     border-color: #ff6b6b;
     box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
     transform: scale(1.1);
@@ -968,6 +991,22 @@ input[type="range"]::-moz-range-thumb:hover {
     .tematica-card {
         -webkit-user-select: none;
         user-select: none;
+    }
+    
+    /* Force WebKit to respect our styles */
+    input,
+    button,
+    select,
+    textarea {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+    }
+    
+    /* Fix background colors in Safari iOS */
+    input[type="text"],
+    input[type="number"] {
+        background-clip: padding-box !important;
+        -webkit-background-clip: padding-box !important;
     }
 }
 
