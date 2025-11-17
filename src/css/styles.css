@@ -625,6 +625,9 @@ input[type="range"]::-moz-range-thumb:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* iOS touch optimization */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .tematica-card:hover {
@@ -633,10 +636,18 @@ input[type="range"]::-moz-range-thumb:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+.tematica-card:active {
+    transform: scale(0.98);
+}
+
 .tematica-card.selected {
     background: rgba(78, 205, 196, 0.3);
     border-color: #4ecdc4;
     box-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+}
+
+.tematica-card.selected:active {
+    transform: scale(0.98);
 }
 
 .tematica-emoji {
@@ -772,12 +783,22 @@ input[type="range"]::-moz-range-thumb:hover {
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 70px;
+    min-height: 44px;
+    /* iOS button optimization */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
 }
 
 .btn-impostor:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-impostor:active {
+    transform: scale(0.95);
 }
 
 .btn-impostor.active {
@@ -789,6 +810,10 @@ input[type="range"]::-moz-range-thumb:hover {
 
 .btn-impostor.active:hover {
     transform: translateY(-3px) scale(1.1);
+}
+
+.btn-impostor.active:active {
+    transform: scale(1.05);
 }
 
 /* Estilo para impostor con pista */
@@ -922,5 +947,33 @@ input[type="range"]::-moz-range-thumb:hover {
     .config-section button {
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
+    }
+}
+
+/* iOS specific optimizations */
+@supports (-webkit-touch-callout: none) {
+    /* Smooth scrolling for iOS */
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #nombresContainer,
+    .tematicas-grid {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Better button press states */
+    button,
+    .btn-impostor,
+    .tematica-card {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+}
+
+/* PWA support */
+@media all and (display-mode: standalone) {
+    body {
+        padding-top: calc(env(safe-area-inset-top) + 20px);
     }
 }
