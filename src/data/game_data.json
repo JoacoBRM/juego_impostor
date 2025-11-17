@@ -1,0 +1,157 @@
+[
+  {
+    "category": "Frutas",
+    "words": [
+      {
+        "name": "Manzana",
+        "clues": [
+          "Se come de postre.",
+          "Puede ser roja o verde.",
+          "Es el logo de una compañía de tecnología.",
+          "Hay una frase: 'Una al día, aleja al doctor'."
+        ]
+      },
+      {
+        "name": "Banana",
+        "clues": [
+          "Es de color amarillo.",
+          "La comen los monos.",
+          "Crece en racimos.",
+          "Se usa para el 'split' o licuados."
+        ]
+      },
+      {
+        "name": "Piña",
+        "clues": [
+          "Tiene una 'corona' de hojas.",
+          "Es fibrosa, dulce y ácida.",
+          "Es la fruta del cóctel hawaiano.",
+          "Su piel es rugosa y escamosa."
+        ]
+      },
+      {
+        "name": "Sandía",
+        "clues": [
+          "Es la fruta más grande.",
+          "Es ideal para el verano.",
+          "Es verde por fuera y roja por dentro.",
+          "Tiene muchas semillas negras."
+        ]
+      }
+    ]
+  },
+  {
+    "category": "Profesiones",
+    "words": [
+      {
+        "name": "Profesor",
+        "clues": [
+          "Trabaja en una escuela o universidad.",
+          "Califica exámenes.",
+          "Utiliza un pizarrón o proyector.",
+          "Da conocimiento a los estudiantes."
+        ]
+      },
+      {
+        "name": "Astronauta",
+        "clues": [
+          "Viaja fuera de la Tierra.",
+          "Flota sin gravedad.",
+          "Usa un traje voluminoso.",
+          "Explora otros planetas."
+        ]
+      },
+      {
+        "name": "Bombero",
+        "clues": [
+          "Usa una manguera grande.",
+          "Trabaja con fuego.",
+          "Utiliza una escalera muy alta.",
+          "Su vehículo es rojo."
+        ]
+      },
+      {
+        "name": "Cocinero",
+        "clues": [
+          "Usa un gorro alto y blanco.",
+          "Trabaja en un restaurante.",
+          "Utiliza sartenes y ollas.",
+          "Crea platos deliciosos."
+        ]
+      }
+    ]
+  },
+  {
+    "category": "Lugares",
+    "words": [
+      {
+        "name": "Biblioteca",
+        "clues": [
+          "Se espera silencio en su interior.",
+          "Hay miles de libros.",
+          "Se necesita una tarjeta para sacar artículos.",
+          "Es un lugar de estudio."
+        ]
+      },
+      {
+        "name": "Cine",
+        "clues": [
+          "La gente come palomitas.",
+          "Todo está oscuro.",
+          "Tiene una pantalla gigante.",
+          "Se compran boletos para entrar."
+        ]
+      },
+      {
+        "name": "Playa",
+        "clues": [
+          "Hay arena y olas.",
+          "La gente se broncea.",
+          "Se construyen castillos aquí.",
+          "Se escucha el sonido del mar."
+        ]
+      },
+      {
+        "name": "Gimnasio",
+        "clues": [
+          "La gente hace ejercicio.",
+          "Hay pesas y máquinas.",
+          "Se suda mucho.",
+          "Se requiere una membresía para entrar."
+        ]
+      }
+    ]
+  },
+  {
+    "category": "Animales",
+    "words": [
+      {
+        "name": "Elefante",
+        "clues": [
+          "Es el animal terrestre más grande.",
+          "Tiene una trompa larga.",
+          "Vive en África o Asia.",
+          "Tiene grandes orejas."
+        ]
+      },
+      {
+        "name": "Delfín",
+        "clues": [
+          "Es un mamífero marino muy inteligente.",
+          "Salta fuera del agua.",
+          "Se comunica con 'clics' y silbidos.",
+          "Es conocido por ser amistoso con humanos."
+        ]
+      },
+      {
+        "name": "Jirafa",
+        "clues": [
+          "Tiene un cuello extremadamente largo.",
+          "Su pelaje tiene manchas.",
+          "Se alimenta de hojas de árboles.",
+          "Duerme muy poco."
+        ]
+      }
+    ]
+  }
+]

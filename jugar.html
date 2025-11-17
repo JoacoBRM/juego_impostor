@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugar - Impostor</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+    <button class="btn-home" onclick="volverAlInicio()">🏠 Volver al Inicio</button>
+    
+    <div class="container">
+        <!-- Paso 1: Número de jugadores -->
+        <div id="paso1" class="paso-config active">
+            <h2>Configuración del Juego</h2>
+            <div class="config-section">
+                <h3>Paso 1: Número de Jugadores</h3>
+                <label for="numJugadores">Seleccione el número de jugadores:</label>
+                <div class="slider-container">
+                    <span class="slider-value" id="sliderValue">5</span>
+                    <input type="range" id="numJugadores" min="3" max="10" value="5" oninput="actualizarValor(this.value)">
+                    <div class="slider-labels">
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                        <span>6</span>
+                        <span>7</span>
+                        <span>8</span>
+                        <span>9</span>
+                        <span>10</span>
+                    </div>
+                </div>
+                <p id="infoImpostores" class="info-impostores">Con 5 jugadores puedes usar hasta 1 impostor</p>
+                <button onclick="irAPaso2()">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 2: Nombres de jugadores -->
+        <div id="paso2" class="paso-config">
+            <h2>Configuración del Juego</h2>
+            <div class="config-section">
+                <h3>Paso 2: Nombres de los Jugadores</h3>
+                <div id="nombresContainer"></div>
+                <div class="button-group">
+                    <button onclick="volverAPaso1()">Anterior</button>
+                    <button onclick="irAPaso3()">Siguiente</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paso 3: Temáticas (placeholder) -->
+        <div id="paso3" class="paso-config">
+            <h2>Configuración del Juego</h2>
+            <div class="config-section">
+                <h3>Paso 3: Selecciona las Temáticas</h3>
+                <p class="tematicas-instruccion">Elige las categorías que quieres incluir en el juego:</p>
+                <div id="tematicasContainer" class="tematicas-grid"></div>
+                
+                <!-- Configuraciones adicionales -->
+                <div class="config-extra">
+                    <div class="config-option">
+                        <div class="toggle-container">
+                            <span class="toggle-label">Incluir pista para el impostor</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="incluirPistas" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="config-option">
+                        <label>Número de impostores:</label>
+                        <div class="botones-impostores">
+                            <button class="btn-impostor active" data-value="1" onclick="seleccionarNumImpostores(1)">1</button>
+                            <button class="btn-impostor" data-value="2" onclick="seleccionarNumImpostores(2)">2</button>
+                            <button class="btn-impostor" data-value="3" onclick="seleccionarNumImpostores(3)">3</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="volverAPaso2()">Anterior</button>
+                    <button onclick="iniciarJuego()">Iniciar Juego</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paso 4: Mostrar palabras a jugadores -->
+        <div id="paso4" class="paso-config">
+            <h2 id="turnoJugador">Turno de Jugador</h2>
+            <div class="config-section reveal-section">
+                <div class="palabra-card">
+                    <div id="palabraContenido" class="palabra-oculta">?</div>
+                </div>
+                <div class="button-group">
+                    <button id="btnMostrar" onclick="togglePalabra()">
+                        <span id="iconoOjo">👁️</span> Mostrar Palabra
+                    </button>
+                    <button onclick="siguienteJugador()">Siguiente Jugador →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paso 5: Empezar el juego -->
+        <div id="paso5" class="paso-config">
+            <h2>¡Todos los jugadores han visto su palabra!</h2>
+            <div class="config-section">
+                <h3>Listos para jugar</h3>
+                <p class="tematicas-instruccion">Ahora comienza la diversión. El impostor debe fingir que conoce la palabra.</p>
+                <div class="button-group">
+                    <button onclick="empezarJuego()">🎮 Empezar Juego</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/game.js"></script>
+</body>
+</html>
