@@ -15,8 +15,6 @@
     <link rel="stylesheet" href="src/css/styles.css">
 </head>
 <body>
-    <button class="btn-home" onclick="volverAlInicio()">🏠 Volver al Inicio</button>
-    
     <div class="container">
         <!-- Paso 1: Número de jugadores -->
         <div id="paso1" class="paso-config active">
@@ -39,7 +37,10 @@
                     </div>
                 </div>
                 <p id="infoImpostores" class="info-impostores">Con 5 jugadores puedes usar hasta 1 impostor</p>
-                <button onclick="irAPaso2()">Siguiente</button>
+                <div class="button-group">
+                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Inicio</button>
+                    <button onclick="irAPaso2()">Siguiente</button>
+                </div>
             </div>
         </div>
 
@@ -50,6 +51,7 @@
                 <h3>Paso 2: Nombres de los Jugadores</h3>
                 <div id="nombresContainer"></div>
                 <div class="button-group">
+                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Inicio</button>
                     <button onclick="volverAPaso1()">Anterior</button>
                     <button onclick="irAPaso3()">Siguiente</button>
                 </div>
@@ -87,6 +89,7 @@
                 </div>
 
                 <div class="button-group">
+                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Inicio</button>
                     <button onclick="volverAPaso2()">Anterior</button>
                     <button onclick="iniciarJuego()">Iniciar Juego</button>
                 </div>
@@ -101,6 +104,7 @@
                     <div id="palabraContenido" class="palabra-oculta">?</div>
                 </div>
                 <div class="button-group">
+                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Inicio</button>
                     <button id="btnMostrar" onclick="togglePalabra()">
                         <span id="iconoOjo">👁️</span> Mostrar Palabra
                     </button>
@@ -116,6 +120,7 @@
                 <h3>Listos para jugar</h3>
                 <p class="tematicas-instruccion">Ahora comienza la diversión. El impostor debe fingir que conoce la palabra.</p>
                 <div class="button-group">
+                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Inicio</button>
                     <button onclick="empezarJuego()">Empezar Juego</button>
                 </div>
             </div>

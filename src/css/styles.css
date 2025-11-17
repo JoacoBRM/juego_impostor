@@ -363,40 +363,9 @@ footer p {
 }
 
 /* Estilos para configuración guiada */
-.btn-home {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-    background: rgba(255, 107, 107, 0.3);
-    border: 2px solid rgba(255, 107, 107, 0.5);
-    border-radius: 15px;
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-    -webkit-tap-highlight-color: transparent;
-    -webkit-appearance: none;
-    appearance: none;
-    white-space: nowrap;
-}
-
-.btn-home:hover {
-    background: rgba(255, 107, 107, 0.6);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
-}
-
-.btn-home:active {
-    transform: scale(0.95);
-}
-
 .container {
     max-width: 900px;
-    margin: 5rem auto 3rem;
+    margin: 3rem auto;
     padding: 0 2rem;
 }
 
@@ -615,6 +584,24 @@ input[type="range"]::-moz-range-thumb:hover {
     justify-content: center;
     gap: 1rem;
     flex-wrap: wrap;
+}
+
+/* Botón secundario (Inicio) */
+.btn-secondary {
+    background: rgba(255, 107, 107, 0.3) !important;
+    background-color: rgba(255, 107, 107, 0.3) !important;
+    border-color: rgba(255, 107, 107, 0.5) !important;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 107, 107, 0.6) !important;
+    background-color: rgba(255, 107, 107, 0.6) !important;
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4) !important;
+}
+
+.btn-secondary:active {
+    background: rgba(255, 107, 107, 0.7) !important;
+    background-color: rgba(255, 107, 107, 0.7) !important;
 }
 
 .button-group button:first-child {
@@ -981,14 +968,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
     .container {
         padding: 0 0.75rem;
-        margin: 4rem auto 2rem;
-    }
-    
-    .btn-home {
-        top: 0.5rem;
-        left: 0.5rem;
-        padding: 0.5rem 0.8rem;
-        font-size: 0.85rem;
+        margin: 2rem auto;
     }
 
     .config-section {
