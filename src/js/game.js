@@ -175,7 +175,8 @@ function crearTarjetasTematicas() {
             'Deportes': '⚽',
             'Colores': '🎨',
             'Países': '🌍',
-            'Comidas': '🍕'
+            'Cosas': '💡',
+            'Comida Rápida': '🍕'
         };
         const emoji = emojis[categoria.category] || '📋';
         
