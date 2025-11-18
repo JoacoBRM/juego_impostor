@@ -135,6 +135,50 @@
                 </div>
             </div>
         </div>
+
+        <!-- Paso 6: Ruleta de orden -->
+        <div id="paso6" class="paso-config">
+            <h2>Estableciendo el orden de participación</h2>
+            <div class="config-section">
+                <h3>Ruleta de Jugadores</h3>
+                <p class="tematicas-instruccion">La ruleta seleccionará el orden en que participarán</p>
+                <div class="ruleta-container">
+                    <div class="ruleta-display">
+                        <div id="ruletaFlecha" class="ruleta-flecha">▼</div>
+                        <div id="ruletaNombre" class="ruleta-nombre">?</div>
+                    </div>
+                    <div id="listaOrden" class="lista-orden"></div>
+                </div>
+                <div class="button-group">
+                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Inicio</button>
+                    <button id="btnGirarRuleta" onclick="girarRuleta()">🎲 Girar Ruleta</button>
+                    <button id="btnContinuarJuego" onclick="continuarAlJuego()" style="display: none;">Continuar al Juego</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paso 7: Indicador de turnos -->
+        <div id="paso7" class="paso-config">
+            <div class="config-section">
+                <h2>Ronda <span id="rondaActual">1</span> de 3</h2>
+                <h3>Turno actual</h3>
+                <div class="turno-display">
+                    <div class="turno-numero">Turno <span id="numeroTurno">1</span> de <span id="totalTurnos">5</span></div>
+                    <div class="turno-jugador">
+                        <div class="turno-nombre" id="nombreTurnoActual">Jugador</div>
+                    </div>
+                </div>
+                <div class="orden-completo">
+                    <h4>Orden de participación:</h4>
+                    <div id="ordenParticipacion" class="lista-participacion"></div>
+                </div>
+                <div class="button-group">
+                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Inicio</button>
+                    <button id="btnSiguienteTurno" onclick="siguienteTurno()">Siguiente →</button>
+                    <button id="btnFinalizarJuego" onclick="finalizarJuego()" style="display: none;">🏁 Finalizar Juego</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="src/js/game.js"></script>
