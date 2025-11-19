@@ -372,10 +372,8 @@ function siguienteJugador() {
     jugadorActualIndex++;
     
     if (jugadorActualIndex >= numJugadores) {
-        // Todos los jugadores han visto su palabra
-        mostrarPaso(5);
+        empezarJuego(); 
     } else {
-        // Mostrar el siguiente jugador
         mostrarTurnoJugador();
     }
 }
