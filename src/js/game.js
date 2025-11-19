@@ -11,6 +11,14 @@ let incluirPistas = true;
 let numImpostores = 1;
 let usarFirebase = true; // Cambiar a false para usar el JSON local
 
+// Variables para la ruleta y orden de participación
+let ordenParticipacion = [];
+let jugadoresRestantes = [];
+let turnoActual = 0;
+let rondaActual = 1;
+const TOTAL_RONDAS = 3;
+let ruletaGirando = false;
+
 // Cargar categorías desde Firebase o JSON local
 async function cargarCategorias() {
     try {
@@ -372,7 +380,7 @@ function siguienteJugador() {
     }
 }
 
-// Empezar el juego (placeholder)
+// Empezar el juego - ir a la ruleta
 function empezarJuego() {
     console.log('¡El juego ha comenzado!');
     
@@ -393,12 +401,178 @@ function empezarJuego() {
             .catch((error) => console.error('Error al guardar partida:', error));
     }
     
-    alert('Esta sección se implementará próximamente...');
+    // Inicializar ruleta
+    inicializarRuleta();
+    mostrarPaso(6);
 }
 
 // Volver al inicio
 function volverAlInicio() {
     window.location.href = 'index.html';
+}
+
+// ===== FUNCIONES DE RULETA Y ORDEN =====
+
+// Inicializar la ruleta
+function inicializarRuleta() {
+    ordenParticipacion = [];
+    jugadoresRestantes = [...Array(numJugadores).keys()]; // [0, 1, 2, ...]
+    document.getElementById('listaOrden').innerHTML = '';
+    document.getElementById('ruletaNombre').textContent = '?';
+    document.getElementById('btnGirarRuleta').style.display = 'inline-block';
+    document.getElementById('btnContinuarJuego').style.display = 'none';
+}
+
+// Girar la ruleta
+function girarRuleta() {
+    if (ruletaGirando || jugadoresRestantes.length === 0) return;
+    
+    ruletaGirando = true;
+    document.getElementById('btnGirarRuleta').disabled = true;
+    
+    const display = document.getElementById('ruletaNombre');
+    let contadorGiros = 0;
+    const maxGiros = 20;
+    const intervalo = 100;
+    
+    // Animación de giro
+    const intervaloRuleta = setInterval(() => {
+        // Mostrar un jugador aleatorio de los restantes
+        const indiceAleatorio = Math.floor(Math.random() * jugadoresRestantes.length);
+        const jugadorIndex = jugadoresRestantes[indiceAleatorio];
+        display.textContent = nombresJugadores[jugadorIndex];
+        display.style.transform = 'scale(1.1)';
+        
+        setTimeout(() => {
+            display.style.transform = 'scale(1)';
+        }, 50);
+        
+        contadorGiros++;
+        
+        if (contadorGiros >= maxGiros) {
+            clearInterval(intervaloRuleta);
+            seleccionarJugadorFinal();
+        }
+    }, intervalo);
+}
+
+// Seleccionar el jugador final después del giro
+function seleccionarJugadorFinal() {
+    // Seleccionar aleatoriamente de los jugadores restantes
+    const indiceAleatorio = Math.floor(Math.random() * jugadoresRestantes.length);
+    const jugadorSeleccionado = jugadoresRestantes[indiceAleatorio];
+    
+    // Agregar al orden
+    ordenParticipacion.push(jugadorSeleccionado);
+    
+    // Quitar de los restantes
+    jugadoresRestantes.splice(indiceAleatorio, 1);
+    
+    // Mostrar el jugador seleccionado con animación
+    const display = document.getElementById('ruletaNombre');
+    display.textContent = nombresJugadores[jugadorSeleccionado];
+    display.classList.add('seleccionado');
+    
+    // Actualizar la lista de orden
+    actualizarListaOrden();
+    
+    // Esperar y habilitar siguiente giro o continuar
+    setTimeout(() => {
+        display.classList.remove('seleccionado');
+        ruletaGirando = false;
+        
+        if (jugadoresRestantes.length > 0) {
+            // Todavía hay jugadores por sortear
+            document.getElementById('btnGirarRuleta').disabled = false;
+        } else {
+            // Todos los jugadores han sido seleccionados
+            document.getElementById('btnGirarRuleta').style.display = 'none';
+            document.getElementById('btnContinuarJuego').style.display = 'inline-block';
+        }
+    }, 1500);
+}
+
+// Actualizar la lista visual del orden
+function actualizarListaOrden() {
+    const lista = document.getElementById('listaOrden');
+    lista.innerHTML = '<h4>Orden establecido:</h4>';
+    
+    ordenParticipacion.forEach((jugadorIndex, posicion) => {
+        const item = document.createElement('div');
+        item.className = 'orden-item';
+        item.innerHTML = `<span class="orden-numero">${posicion + 1}.</span> <span class="orden-nombre">${nombresJugadores[jugadorIndex]}</span>`;
+        lista.appendChild(item);
+    });
+}
+
+// Continuar al juego después de la ruleta
+function continuarAlJuego() {
+    turnoActual = 0;
+    rondaActual = 1;
+    mostrarTurnoActual();
+    mostrarPaso(7);
+}
+
+// Mostrar el turno actual
+function mostrarTurnoActual() {
+    const jugadorIndex = ordenParticipacion[turnoActual];
+    document.getElementById('nombreTurnoActual').textContent = nombresJugadores[jugadorIndex];
+    document.getElementById('numeroTurno').textContent = turnoActual + 1;
+    document.getElementById('totalTurnos').textContent = numJugadores;
+    document.getElementById('rondaActual').textContent = rondaActual;
+    
+    // Actualizar lista de participación con el turno actual resaltado
+    actualizarListaParticipacion();
+    
+    // Mostrar/ocultar botones según el estado
+    if (rondaActual >= TOTAL_RONDAS && turnoActual >= numJugadores - 1) {
+        document.getElementById('btnSiguienteTurno').style.display = 'none';
+        document.getElementById('btnFinalizarJuego').style.display = 'inline-block';
+    } else {
+        document.getElementById('btnSiguienteTurno').style.display = 'inline-block';
+        document.getElementById('btnFinalizarJuego').style.display = 'none';
+    }
+}
+
+// Actualizar la lista de participación con indicador del turno actual
+function actualizarListaParticipacion() {
+    const lista = document.getElementById('ordenParticipacion');
+    lista.innerHTML = '';
+    
+    ordenParticipacion.forEach((jugadorIndex, posicion) => {
+        const item = document.createElement('div');
+        item.className = 'participacion-item';
+        if (posicion === turnoActual) {
+            item.classList.add('activo');
+        }
+        item.innerHTML = `<span class="participacion-numero">${posicion + 1}.</span> <span class="participacion-nombre">${nombresJugadores[jugadorIndex]}</span>`;
+        lista.appendChild(item);
+    });
+}
+
+// Siguiente turno
+function siguienteTurno() {
+    turnoActual++;
+    
+    if (turnoActual >= numJugadores) {
+        // Termina la ronda
+        turnoActual = 0;
+        rondaActual++;
+        
+        if (rondaActual <= TOTAL_RONDAS) {
+            // Mostrar que comienza nueva ronda
+            mostrarTurnoActual();
+        }
+    } else {
+        mostrarTurnoActual();
+    }
+}
+
+// Finalizar el juego
+function finalizarJuego() {
+    if (confirm('¿Deseas volver al inicio?')) {
+        volverAlInicio();
+    }
 }
 
 // Cargar categorías al iniciar
