@@ -221,7 +221,7 @@ img {
     height: auto;
     margin: 1.5rem auto;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease;
     object-fit: contain;
 }
