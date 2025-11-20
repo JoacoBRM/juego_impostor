@@ -16,8 +16,13 @@ let ordenParticipacion = [];
 let jugadoresRestantes = [];
 let turnoActual = 0;
 let rondaActual = 1;
-const TOTAL_RONDAS = 3;
+const TOTAL_RONDAS = 2;
 let ruletaGirando = false;
+
+// Variables para el sistema de votación
+let jugadoresVivos = [];
+let jugadoresEliminados = [];
+let juegoTerminado = false;
 
 // Cargar categorías desde Firebase o JSON local
 async function cargarCategorias() {
@@ -445,13 +450,13 @@ function volverAlInicio() {
 function inicializarRuleta() {
     ordenParticipacion = [];
     jugadoresRestantes = [...Array(numJugadores).keys()]; // [0, 1, 2, ...]
+    ruletaGirando = false; // Resetear estado de la ruleta
     document.getElementById('listaOrden').innerHTML = '';
     document.getElementById('ruletaNombre').textContent = '?';
     document.getElementById('btnGirarRuleta').style.display = 'inline-block';
+    document.getElementById('btnGirarRuleta').disabled = false; // Habilitar el botón
     document.getElementById('btnContinuarJuego').style.display = 'none';
 }
-
-// En src/js/game.js
 
 // Girar la ruleta (Modificado: Un solo tiro define todo)
 function girarRuleta() {
@@ -521,74 +526,6 @@ function generarOrdenCompleto() {
     }, 1500);
 }// En src/js/game.js
 
-// Girar la ruleta (Modificado: Un solo tiro define todo)
-function girarRuleta() {
-    // Si ya está girando o ya tenemos el orden, no hacer nada
-    if (ruletaGirando || ordenParticipacion.length > 0) return;
-    
-    ruletaGirando = true;
-    document.getElementById('btnGirarRuleta').disabled = true;
-    
-    const display = document.getElementById('ruletaNombre');
-    let contadorGiros = 0;
-    const maxGiros = 15; // Duración de la animación
-    const intervalo = 80; // Velocidad
-    
-    // Animación visual antes de mostrar el resultado final
-    const intervaloRuleta = setInterval(() => {
-        // Muestra nombres al azar solo para el efecto visual
-        const nombreAleatorio = nombresJugadores[Math.floor(Math.random() * nombresJugadores.length)];
-        display.textContent = nombreAleatorio;
-        
-        // Efecto de "latido" visual
-        display.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-            display.style.transform = 'scale(1)';
-        }, 40);
-        
-        contadorGiros++;
-        
-        if (contadorGiros >= maxGiros) {
-            clearInterval(intervaloRuleta);
-            generarOrdenCompleto(); // Llamamos a la nueva función
-        }
-    }, intervalo);
-}
-
-// Nueva función: Genera el orden de TODOS los jugadores de una vez
-function generarOrdenCompleto() {
-    const display = document.getElementById('ruletaNombre');
-    
-    // 1. Crear lista de índices [0, 1, 2...]
-    let indices = Array.from({length: numJugadores}, (_, i) => i);
-    
-    // 2. Mezclar aleatoriamente (Algoritmo Fisher-Yates)
-    for (let i = indices.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [indices[i], indices[j]] = [indices[j], indices[i]];
-    }
-    
-    // Asignamos el orden mezclado directamente
-    ordenParticipacion = indices;
-    
-    // 3. Mostrar mensaje de éxito en la ruleta
-    display.textContent = "¡Orden Listo!";
-    display.classList.add('seleccionado'); // Color verde/cian (según tu CSS)
-    
-    // 4. Mostrar la lista completa en la pantalla
-    actualizarListaOrden();
-    
-    // 5. Cambiar botones inmediatamente
-    ruletaGirando = false;
-    document.getElementById('btnGirarRuleta').style.display = 'none';
-    document.getElementById('btnContinuarJuego').style.display = 'inline-block';
-    
-    // Quitar el efecto de resaltado después de un momento
-    setTimeout(() => {
-        display.classList.remove('seleccionado');
-    }, 1500);
-}
-
 // Actualizar la lista visual del orden
 function actualizarListaOrden() {
     const lista = document.getElementById('listaOrden');
@@ -606,6 +543,12 @@ function actualizarListaOrden() {
 function continuarAlJuego() {
     turnoActual = 0;
     rondaActual = 1;
+    
+    // Inicializar jugadores vivos (todos al inicio)
+    jugadoresVivos = Array.from({length: numJugadores}, (_, i) => i);
+    jugadoresEliminados = [];
+    juegoTerminado = false;
+    
     mostrarTurnoActual();
     mostrarPaso(7);
 }
@@ -615,19 +558,21 @@ function mostrarTurnoActual() {
     const jugadorIndex = ordenParticipacion[turnoActual];
     document.getElementById('nombreTurnoActual').textContent = nombresJugadores[jugadorIndex];
     document.getElementById('numeroTurno').textContent = turnoActual + 1;
-    document.getElementById('totalTurnos').textContent = numJugadores;
+    // Usar el número de jugadores vivos en lugar del total
+    const totalJugadoresActivos = ordenParticipacion.length;
+    document.getElementById('totalTurnos').textContent = totalJugadoresActivos;
     document.getElementById('rondaActual').textContent = rondaActual;
     
     // Actualizar lista de participación con el turno actual resaltado
     actualizarListaParticipacion();
     
     // Mostrar/ocultar botones según el estado
-    if (rondaActual >= TOTAL_RONDAS && turnoActual >= numJugadores - 1) {
+    if (rondaActual >= TOTAL_RONDAS && turnoActual >= totalJugadoresActivos - 1) {
         document.getElementById('btnSiguienteTurno').style.display = 'none';
-        document.getElementById('btnFinalizarJuego').style.display = 'inline-block';
+        document.getElementById('btnEmpezarVotacion').style.display = 'inline-block';
     } else {
         document.getElementById('btnSiguienteTurno').style.display = 'inline-block';
-        document.getElementById('btnFinalizarJuego').style.display = 'none';
+        document.getElementById('btnEmpezarVotacion').style.display = 'none';
     }
 }
 
@@ -651,7 +596,9 @@ function actualizarListaParticipacion() {
 function siguienteTurno() {
     turnoActual++;
     
-    if (turnoActual >= numJugadores) {
+    const totalJugadoresActivos = ordenParticipacion.length;
+    
+    if (turnoActual >= totalJugadoresActivos) {
         // Termina la ronda
         turnoActual = 0;
         rondaActual++;
@@ -670,6 +617,233 @@ function finalizarJuego() {
     if (confirm('¿Deseas volver al inicio?')) {
         volverAlInicio();
     }
+}
+
+// Volver a jugar manteniendo jugadores y nombres
+function volverAJugar() {
+    // Resetear selecciones de temáticas
+    tematicasSeleccionadas = [];
+    document.querySelectorAll('.tematica-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Resetear configuración de pistas
+    document.getElementById('incluirPistas').checked = true;
+    incluirPistas = true;
+    
+    // Resetear variables de votación
+    jugadoresVivos = [];
+    jugadoresEliminados = [];
+    juegoTerminado = false;
+    turnoActual = 0;
+    rondaActual = 1;
+    
+    // Actualizar botones de impostores según el número de jugadores actual
+    actualizarBotonesImpostores();
+    
+    // Crear nuevamente las tarjetas de temáticas (por si se cargaron nuevas)
+    crearTarjetasTematicas();
+    
+    // Volver al paso 3 (selección de temáticas)
+    mostrarPaso(3);
+}
+
+// ===== SISTEMA DE VOTACIÓN =====
+
+// Empezar la votación
+function empezarVotacion() {
+    // Asegurarse de que el grid esté visible
+    document.getElementById('jugadoresVotacion').style.display = 'grid';
+    mostrarJugadoresParaVotar();
+    mostrarPaso(8);
+}
+
+// Mostrar jugadores disponibles para votar
+function mostrarJugadoresParaVotar() {
+    const container = document.getElementById('jugadoresVotacion');
+    container.innerHTML = '';
+    container.style.display = 'grid';
+    
+    // Ocultar resultado anterior
+    document.getElementById('resultadoVotacion').style.display = 'none';
+    document.getElementById('botonesVotacion').style.display = 'none';
+    document.getElementById('botonesFinales').style.display = 'none';
+    
+    // Mostrar solo jugadores vivos
+    jugadoresVivos.forEach(jugadorIndex => {
+        const card = document.createElement('div');
+        card.className = 'jugador-votacion-card';
+        
+        // Todos los jugadores tienen el mismo icono de interrogación
+        const emoji = '❓';
+        
+        card.innerHTML = `
+            <div class="jugador-emoji">${emoji}</div>
+            <div class="jugador-nombre-votacion">${nombresJugadores[jugadorIndex]}</div>
+        `;
+        
+        card.onclick = () => votarJugador(jugadorIndex);
+        container.appendChild(card);
+    });
+}
+
+// Votar para eliminar a un jugador
+function votarJugador(jugadorIndex) {
+    // Eliminar al jugador de los vivos
+    jugadoresVivos = jugadoresVivos.filter(i => i !== jugadorIndex);
+    jugadoresEliminados.push(jugadorIndex);
+    
+    // Verificar si es impostor
+    const esImpostor = impostoresIndices.includes(jugadorIndex);
+    
+    // Mostrar resultado
+    mostrarResultadoVotacion(jugadorIndex, esImpostor);
+    
+    // Verificar condiciones de victoria/derrota
+    verificarEstadoJuego();
+}
+
+// Mostrar resultado de la votación
+function mostrarResultadoVotacion(jugadorIndex, esImpostor) {
+    const resultadoDiv = document.getElementById('resultadoVotacion');
+    const jugadorEliminadoH3 = document.getElementById('jugadorEliminado');
+    const rolDiv = document.getElementById('rolJugador');
+    
+    jugadorEliminadoH3.textContent = `${nombresJugadores[jugadorIndex]} ha sido eliminado`;
+    
+    if (esImpostor) {
+        rolDiv.innerHTML = `
+            <div class="rol-impostor">
+                <span style="font-size: 3rem;">🎭</span>
+                <p style="font-size: 1.5rem; color: #e94560; font-weight: bold;">¡ERA UN IMPOSTOR!</p>
+            </div>
+        `;
+    } else {
+        rolDiv.innerHTML = `
+            <div class="rol-inocente">
+                <span style="font-size: 3rem;">👤</span>
+                <p style="font-size: 1.5rem; color: #4ecdc4; font-weight: bold;">Era un jugador inocente</p>
+            </div>
+        `;
+    }
+    
+    resultadoDiv.style.display = 'block';
+    
+    // Ocultar las tarjetas de votación
+    document.getElementById('jugadoresVotacion').style.display = 'none';
+}
+
+// Verificar estado del juego
+function verificarEstadoJuego() {
+    const impostoresVivos = jugadoresVivos.filter(i => impostoresIndices.includes(i)).length;
+    const inocentesVivos = jugadoresVivos.filter(i => !impostoresIndices.includes(i)).length;
+    
+    const estadoDiv = document.getElementById('estadoJuego');
+    
+    // Victoria: todos los impostores eliminados
+    if (impostoresVivos === 0) {
+        estadoDiv.innerHTML = `
+            <div class="victoria">
+                <h2 style="color: #4ecdc4; font-size: 2rem;">🎉 ¡VICTORIA!</h2>
+                <p style="font-size: 1.3rem;">Los jugadores inocentes han ganado</p>
+                <p style="font-size: 1.1rem; margin-top: 1rem;">Todos los impostores han sido eliminados</p>
+            </div>
+        `;
+        juegoTerminado = true;
+        document.getElementById('botonesFinales').style.display = 'flex';
+        return;
+    }
+    
+    // Derrota: número de impostores >= número de inocentes
+    if (impostoresVivos >= inocentesVivos) {
+        estadoDiv.innerHTML = `
+            <div class="derrota">
+                <h2 style="color: #e94560; font-size: 2rem;">💀 ¡DERROTA!</h2>
+                <p style="font-size: 1.3rem;">Los impostores han ganado</p>
+                <p style="font-size: 1.1rem; margin-top: 1rem;">Los impostores son iguales o más que los inocentes</p>
+            </div>
+        `;
+        juegoTerminado = true;
+        document.getElementById('botonesFinales').style.display = 'flex';
+        return;
+    }
+    
+    // El juego continúa
+    estadoDiv.innerHTML = `
+        <div class="juego-continua">
+            <p style="font-size: 1.2rem; margin-top: 1rem;">
+                <strong>Impostores vivos:</strong> ${impostoresVivos} 
+                <span style="margin: 0 1rem;">|</span>
+                <strong>Inocentes vivos:</strong> ${inocentesVivos}
+            </p>
+            <p style="font-size: 1rem; margin-top: 0.5rem; color: rgba(255, 255, 255, 0.8);">
+                El juego continúa. ¿Qué desean hacer?
+            </p>
+        </div>
+    `;
+    
+    document.getElementById('botonesVotacion').style.display = 'flex';
+}
+
+// Continuar votando
+function continuarVotacion() {
+    document.getElementById('jugadoresVotacion').style.display = 'grid';
+    mostrarJugadoresParaVotar();
+}
+
+// Iniciar ronda extra
+function iniciarRondaExtra() {
+    // Resetear turno actual
+    turnoActual = 0;
+    rondaActual++;
+    
+    // Actualizar el orden de participación solo con jugadores vivos
+    ordenParticipacion = ordenParticipacion.filter(i => jugadoresVivos.includes(i));
+    
+    // Volver al paso de turnos
+    mostrarTurnoActual();
+    mostrarPaso(7);
+}
+
+// Mostrar resultado final
+function mostrarResultadoFinal() {
+    const contenido = document.getElementById('contenidoResultado');
+    const titulo = document.getElementById('tituloResultado');
+    
+    const impostoresVivos = jugadoresVivos.filter(i => impostoresIndices.includes(i)).length;
+    
+    if (impostoresVivos === 0) {
+        titulo.textContent = '🎉 ¡Victoria de los Inocentes!';
+        titulo.style.color = '#4ecdc4';
+    } else {
+        titulo.textContent = '💀 ¡Victoria de los Impostores!';
+        titulo.style.color = '#e94560';
+    }
+    
+    let html = '<div class="resumen-final">';
+    
+    // Mostrar impostores
+    html += '<div class="seccion-resumen"><h3 style="color: #e94560;">🎭 Impostores:</h3><ul>';
+    impostoresIndices.forEach(i => {
+        const estado = jugadoresVivos.includes(i) ? '✅ Sobrevivió' : '❌ Eliminado';
+        html += `<li>${nombresJugadores[i]} - ${estado}</li>`;
+    });
+    html += '</ul></div>';
+    
+    // Mostrar inocentes
+    html += '<div class="seccion-resumen"><h3 style="color: #4ecdc4;">👤 Jugadores Inocentes:</h3><ul>';
+    for (let i = 0; i < numJugadores; i++) {
+        if (!impostoresIndices.includes(i)) {
+            const estado = jugadoresVivos.includes(i) ? '✅ Sobrevivió' : '❌ Eliminado';
+            html += `<li>${nombresJugadores[i]} - ${estado}</li>`;
+        }
+    }
+    html += '</ul></div>';
+    
+    html += '</div>';
+    
+    contenido.innerHTML = html;
+    mostrarPaso(9);
 }
 
 // Cargar categorías al iniciar
