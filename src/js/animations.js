@@ -1,29 +1,3 @@
-// Crear partículas flotantes
-function createParticles() {
-    const particleCount = 20;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Posición aleatoria horizontal
-        particle.style.left = Math.random() * 100 + '%';
-        
-        // Tamaño aleatorio
-        const size = Math.random() * 5 + 5;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        
-        // Retraso aleatorio en la animación
-        particle.style.animationDelay = Math.random() * 15 + 's';
-        
-        // Duración aleatoria
-        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-        
-        document.body.appendChild(particle);
-    }
-}
-
 // Efecto de seguimiento del cursor
 function createCursorEffect() {
     const cursor = document.createElement('div');

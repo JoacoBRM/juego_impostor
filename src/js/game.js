@@ -195,6 +195,21 @@ function crearTarjetasTematicas() {
     const container = document.getElementById('tematicasContainer');
     container.innerHTML = '';
     
+    // --- INICIO DEL CAMBIO: Agregar tarjeta Aleatorio ---
+    const cardRandom = document.createElement('div');
+    cardRandom.className = 'tematica-card';
+    cardRandom.setAttribute('data-category', 'Aleatorio');
+    
+    cardRandom.innerHTML = `
+        <div class="tematica-emoji">🎲</div>
+        <div class="tematica-nombre">Aleatorio</div>
+        <div class="tematica-check">✓</div>
+    `;
+    
+    // Usamos la misma función toggleTematica
+    cardRandom.onclick = () => toggleTematica('Aleatorio', cardRandom);
+    container.appendChild(cardRandom);
+    
     categorias.forEach((categoria, index) => {
         const card = document.createElement('div');
         card.className = 'tematica-card';
@@ -291,10 +306,25 @@ function seleccionarImpostores() {
 
 // Seleccionar una palabra aleatoria de las categorías seleccionadas
 function seleccionarPalabraAleatoria() {
-    // Filtrar las categorías seleccionadas
-    const categoriasDisponibles = categorias.filter(cat => 
-        tematicasSeleccionadas.includes(cat.category)
-    );
+    let categoriasDisponibles;
+
+    // --- INICIO DEL CAMBIO ---
+    // Si se seleccionó "Aleatorio", usamos TODAS las categorías
+    if (tematicasSeleccionadas.includes('Aleatorio')) {
+        categoriasDisponibles = categorias;
+    } else {
+        // Si no, usamos solo las seleccionadas (comportamiento original)
+        categoriasDisponibles = categorias.filter(cat => 
+            tematicasSeleccionadas.includes(cat.category)
+        );
+    }
+    // --- FIN DEL CAMBIO ---
+    
+    // Validación de seguridad (por si acaso)
+    if (categoriasDisponibles.length === 0) {
+        console.error("No hay categorías disponibles");
+        return;
+    }
     
     // Seleccionar una categoría aleatoria
     const categoriaAleatoria = categoriasDisponibles[
@@ -421,72 +451,141 @@ function inicializarRuleta() {
     document.getElementById('btnContinuarJuego').style.display = 'none';
 }
 
-// Girar la ruleta
+// En src/js/game.js
+
+// Girar la ruleta (Modificado: Un solo tiro define todo)
 function girarRuleta() {
-    if (ruletaGirando || jugadoresRestantes.length === 0) return;
+    // Si ya está girando o ya tenemos el orden, no hacer nada
+    if (ruletaGirando || ordenParticipacion.length > 0) return;
     
     ruletaGirando = true;
     document.getElementById('btnGirarRuleta').disabled = true;
     
     const display = document.getElementById('ruletaNombre');
     let contadorGiros = 0;
-    const maxGiros = 20;
-    const intervalo = 100;
+    const maxGiros = 15; // Duración de la animación
+    const intervalo = 80; // Velocidad
     
-    // Animación de giro
+    // Animación visual antes de mostrar el resultado final
     const intervaloRuleta = setInterval(() => {
-        // Mostrar un jugador aleatorio de los restantes
-        const indiceAleatorio = Math.floor(Math.random() * jugadoresRestantes.length);
-        const jugadorIndex = jugadoresRestantes[indiceAleatorio];
-        display.textContent = nombresJugadores[jugadorIndex];
-        display.style.transform = 'scale(1.1)';
+        // Muestra nombres al azar solo para el efecto visual
+        const nombreAleatorio = nombresJugadores[Math.floor(Math.random() * nombresJugadores.length)];
+        display.textContent = nombreAleatorio;
         
+        // Efecto de "latido" visual
+        display.style.transform = 'scale(1.1)';
         setTimeout(() => {
             display.style.transform = 'scale(1)';
-        }, 50);
+        }, 40);
         
         contadorGiros++;
         
         if (contadorGiros >= maxGiros) {
             clearInterval(intervaloRuleta);
-            seleccionarJugadorFinal();
+            generarOrdenCompleto(); // Llamamos a la nueva función
         }
     }, intervalo);
 }
 
-// Seleccionar el jugador final después del giro
-function seleccionarJugadorFinal() {
-    // Seleccionar aleatoriamente de los jugadores restantes
-    const indiceAleatorio = Math.floor(Math.random() * jugadoresRestantes.length);
-    const jugadorSeleccionado = jugadoresRestantes[indiceAleatorio];
-    
-    // Agregar al orden
-    ordenParticipacion.push(jugadorSeleccionado);
-    
-    // Quitar de los restantes
-    jugadoresRestantes.splice(indiceAleatorio, 1);
-    
-    // Mostrar el jugador seleccionado con animación
+// Nueva función: Genera el orden de TODOS los jugadores de una vez
+function generarOrdenCompleto() {
     const display = document.getElementById('ruletaNombre');
-    display.textContent = nombresJugadores[jugadorSeleccionado];
-    display.classList.add('seleccionado');
     
-    // Actualizar la lista de orden
+    // 1. Crear lista de índices [0, 1, 2...]
+    let indices = Array.from({length: numJugadores}, (_, i) => i);
+    
+    // 2. Mezclar aleatoriamente (Algoritmo Fisher-Yates)
+    for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    
+    // Asignamos el orden mezclado directamente
+    ordenParticipacion = indices;
+    
+    // 3. Mostrar mensaje de éxito en la ruleta
+    display.textContent = "¡Orden Listo!";
+    display.classList.add('seleccionado'); // Color verde/cian (según tu CSS)
+    
+    // 4. Mostrar la lista completa en la pantalla
     actualizarListaOrden();
     
-    // Esperar y habilitar siguiente giro o continuar
+    // 5. Cambiar botones inmediatamente
+    ruletaGirando = false;
+    document.getElementById('btnGirarRuleta').style.display = 'none';
+    document.getElementById('btnContinuarJuego').style.display = 'inline-block';
+    
+    // Quitar el efecto de resaltado después de un momento
     setTimeout(() => {
         display.classList.remove('seleccionado');
-        ruletaGirando = false;
+    }, 1500);
+}// En src/js/game.js
+
+// Girar la ruleta (Modificado: Un solo tiro define todo)
+function girarRuleta() {
+    // Si ya está girando o ya tenemos el orden, no hacer nada
+    if (ruletaGirando || ordenParticipacion.length > 0) return;
+    
+    ruletaGirando = true;
+    document.getElementById('btnGirarRuleta').disabled = true;
+    
+    const display = document.getElementById('ruletaNombre');
+    let contadorGiros = 0;
+    const maxGiros = 15; // Duración de la animación
+    const intervalo = 80; // Velocidad
+    
+    // Animación visual antes de mostrar el resultado final
+    const intervaloRuleta = setInterval(() => {
+        // Muestra nombres al azar solo para el efecto visual
+        const nombreAleatorio = nombresJugadores[Math.floor(Math.random() * nombresJugadores.length)];
+        display.textContent = nombreAleatorio;
         
-        if (jugadoresRestantes.length > 0) {
-            // Todavía hay jugadores por sortear
-            document.getElementById('btnGirarRuleta').disabled = false;
-        } else {
-            // Todos los jugadores han sido seleccionados
-            document.getElementById('btnGirarRuleta').style.display = 'none';
-            document.getElementById('btnContinuarJuego').style.display = 'inline-block';
+        // Efecto de "latido" visual
+        display.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            display.style.transform = 'scale(1)';
+        }, 40);
+        
+        contadorGiros++;
+        
+        if (contadorGiros >= maxGiros) {
+            clearInterval(intervaloRuleta);
+            generarOrdenCompleto(); // Llamamos a la nueva función
         }
+    }, intervalo);
+}
+
+// Nueva función: Genera el orden de TODOS los jugadores de una vez
+function generarOrdenCompleto() {
+    const display = document.getElementById('ruletaNombre');
+    
+    // 1. Crear lista de índices [0, 1, 2...]
+    let indices = Array.from({length: numJugadores}, (_, i) => i);
+    
+    // 2. Mezclar aleatoriamente (Algoritmo Fisher-Yates)
+    for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    
+    // Asignamos el orden mezclado directamente
+    ordenParticipacion = indices;
+    
+    // 3. Mostrar mensaje de éxito en la ruleta
+    display.textContent = "¡Orden Listo!";
+    display.classList.add('seleccionado'); // Color verde/cian (según tu CSS)
+    
+    // 4. Mostrar la lista completa en la pantalla
+    actualizarListaOrden();
+    
+    // 5. Cambiar botones inmediatamente
+    ruletaGirando = false;
+    document.getElementById('btnGirarRuleta').style.display = 'none';
+    document.getElementById('btnContinuarJuego').style.display = 'inline-block';
+    
+    // Quitar el efecto de resaltado después de un momento
+    setTimeout(() => {
+        display.classList.remove('seleccionado');
     }, 1500);
 }
 
