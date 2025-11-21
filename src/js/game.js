@@ -717,12 +717,56 @@ function volverAJugar() {
     document.getElementById('incluirPistas').checked = true;
     incluirPistas = true;
 
+    // Resetear variables de juego
+    jugadorActualIndex = 0;
+    palabraVisible = false;
+    palabraSeleccionada = '';
+    pistaSeleccionada = '';
+    impostoresIndices = [];
+
     // Resetear variables de votación
     jugadoresVivos = [];
     jugadoresEliminados = [];
     juegoTerminado = false;
     turnoActual = 0;
     rondaActual = 1;
+    
+    // Resetear variables de ruleta
+    ordenParticipacion = [];
+    jugadoresRestantes = [];
+    ruletaGirando = false;
+
+    // Cerrar popup si está abierto
+    const popup = document.getElementById('popupTemporizador');
+    if (popup) {
+        popup.classList.remove('active');
+    }
+    
+    // Detener temporizador si está corriendo
+    if (intervaloTemporizador) {
+        clearInterval(intervaloTemporizador);
+        intervaloTemporizador = null;
+    }
+
+    // Limpiar clases de animación del paso 4
+    const header = document.getElementById('turnoJugador');
+    const contenedor = document.getElementById('contenedorReveal');
+    const palabraContenido = document.getElementById('palabraContenido');
+    const btnMostrar = document.getElementById('btnMostrar');
+    
+    if (header) {
+        header.classList.remove('slide-out', 'slide-in');
+    }
+    if (contenedor) {
+        contenedor.classList.remove('slide-out', 'slide-in');
+    }
+    if (palabraContenido) {
+        palabraContenido.textContent = '?';
+        palabraContenido.className = 'palabra-oculta';
+    }
+    if (btnMostrar) {
+        btnMostrar.innerHTML = '<span id="iconoOjo">👁️</span> Mostrar Palabra';
+    }
 
     // Actualizar botones de impostores según el número de jugadores actual
     actualizarBotonesImpostores();
