@@ -10,10 +10,12 @@ Es un juego de deducción social diseñado para la web (PWA) donde la mayoría d
 * **Gestión de Palabras:**
   * Se selecciona una palabra secreta de una temática elegida.
   * Todos los jugadores la ven, excepto el impostor.
+  * Cada jugador debe mostrar y ocultar su palabra para continuar.
 * **Pista para el Impostor:** Se puede incluir una pista sobre la palabra secreta para el impostor, permitiéndole "subir la dificultad".
-* **Ruleta de Orden:** Utiliza una ruleta virtual en el "Paso 6" para establecer de forma aleatoria el orden de participación de los jugadores.
-* **Rondas de Turnos:** El juego está estructurado para un total de **3 rondas** de participación por jugador (Turnos).
-* **Votaciones:** La meta es que los jugadores discutan y voten para descubrir quién es el impostor (la votación final se realiza fuera de la aplicación).
+* **Temporizador de Transición:** Después de ocultar la palabra, aparece un popup con cuenta regresiva de 5 segundos antes de pasar al siguiente jugador.
+* **Ruleta de Orden:** Utiliza una ruleta virtual para establecer de forma aleatoria el orden de participación de los jugadores.
+* **Rondas de Turnos:** El juego está estructurado para un total de **2 rondas** de participación por jugador (Turnos).
+* **Sistema de Votación:** Incluye un sistema integrado de votación donde los jugadores pueden eliminar sospechosos y descubrir al impostor.
 
 ### ⚙️ Configuración del Juego
 
