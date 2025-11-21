@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Impostor">
@@ -17,12 +19,13 @@
     <link rel="stylesheet" href="src/css/components.css">
     <link rel="stylesheet" href="src/css/animations.css">
 </head>
+
 <body>
     <!-- Firebase App (core) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <!-- Firebase Firestore -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    
+
     <!-- Configuración de Firebase -->
     <script src="src/js/firebase-config.js"></script>
     <!-- Módulo de base de datos -->
@@ -37,7 +40,8 @@
                 <label for="numJugadores">Seleccione el número de jugadores:</label>
                 <div class="slider-container">
                     <span class="slider-value" id="sliderValue">5</span>
-                    <input type="range" id="numJugadores" min="3" max="10" value="5" oninput="actualizarValor(this.value)">
+                    <input type="range" id="numJugadores" min="3" max="10" value="5"
+                        oninput="actualizarValor(this.value)">
                     <div class="slider-labels">
                         <span>3</span>
                         <span>4</span>
@@ -82,7 +86,7 @@
                 <h3>Paso 3: Selecciona las Temáticas</h3>
                 <p class="tematicas-instruccion">Elige las categorías que quieres incluir en el juego:</p>
                 <div id="tematicasContainer" class="tematicas-grid"></div>
-                
+
                 <!-- Configuraciones adicionales -->
                 <div class="config-extra">
                     <div class="config-option">
@@ -94,11 +98,12 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <div class="config-option">
                         <label>Número de impostores:</label>
                         <div class="botones-impostores">
-                            <button class="btn-impostor active" data-value="1" onclick="seleccionarNumImpostores(1)">1</button>
+                            <button class="btn-impostor active" data-value="1"
+                                onclick="seleccionarNumImpostores(1)">1</button>
                             <button class="btn-impostor" data-value="2" onclick="seleccionarNumImpostores(2)">2</button>
                             <button class="btn-impostor" data-value="3" onclick="seleccionarNumImpostores(3)">3</button>
                         </div>
@@ -117,8 +122,8 @@
 
         <!-- Paso 4: Mostrar palabras a jugadores -->
         <div id="paso4" class="paso-config">
-            <h2 id="turnoJugador">Turno de Jugador</h2>
-            <div class="config-section reveal-section">
+            <h2 id="turnoJugador" class="turno-jugador-header">Turno de Jugador</h2>
+            <div id="contenedorReveal" class="config-section reveal-section">
                 <div class="palabra-card">
                     <div id="palabraContenido" class="palabra-oculta">?</div>
                 </div>
@@ -126,16 +131,34 @@
                     <button id="btnMostrar" onclick="togglePalabra()">
                         <span id="iconoOjo">👁️</span> Mostrar Palabra
                     </button>
-                    <button onclick="siguienteJugador()">Siguiente Jugador →</button>
+                </div>
+            </div>
+            
+            <!-- Popup del temporizador -->
+            <div id="popupTemporizador" class="popup-overlay">
+                <div class="popup-content">
+                    <h3>¡Palabra vista!</h3>
+                    <div class="temporizador-display">
+                        <div id="contadorTemporizador" class="contador-numero">5</div>
+                    </div>
+                    <p class="mensaje-temporizador">Preparando siguiente jugador...</p>
+                    <div class="button-group">
+                        <button onclick="volverAVerPalabra()">👁️ Volver a ver palabra</button>
+                        <button onclick="saltarTemporizador()">Siguiente →</button>
+                    </div>
                 </div>
             </div>
             <div class="config-section" style="margin-top: 2rem; text-align: center;">
+                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
+                    Volver a empezar</button>
+            </div>
+            <div class="config-section" style="margin-top: 1rem; text-align: center;">
                 <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
             </div>
         </div>
 
-        <!-- Paso 6: Ruleta de orden -->
-        <div id="paso6" class="paso-config">
+        <!-- Paso 5: Ruleta de orden -->
+        <div id="paso5" class="paso-config">
             <h2>Estableciendo el orden de participación</h2>
             <div class="config-section">
                 <h3>Ruleta de Jugadores</h3>
@@ -149,21 +172,27 @@
                 </div>
                 <div class="button-group">
                     <button id="btnGirarRuleta" onclick="girarRuleta()">🎲 Girar Ruleta</button>
-                    <button id="btnContinuarJuego" onclick="continuarAlJuego()" style="display: none;">Continuar al Juego</button>
+                    <button id="btnContinuarJuego" onclick="continuarAlJuego()" style="display: none;">Continuar al
+                        Juego</button>
                 </div>
             </div>
             <div class="config-section" style="margin-top: 2rem; text-align: center;">
+                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
+                    Volver a empezar</button>
+            </div>
+            <div class="config-section" style="margin-top: 1rem; text-align: center;">
                 <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
             </div>
         </div>
 
-        <!-- Paso 7: Indicador de turnos -->
-        <div id="paso7" class="paso-config">
+        <!-- Paso 6: Indicador de turnos -->
+        <div id="paso6" class="paso-config">
             <div class="config-section">
                 <h2>Ronda <span id="rondaActual">1</span> de 2</h2>
                 <h3>Turno actual</h3>
                 <div class="turno-display">
-                    <div class="turno-numero">Turno <span id="numeroTurno">1</span> de <span id="totalTurnos">5</span></div>
+                    <div class="turno-numero">Turno <span id="numeroTurno">1</span> de <span id="totalTurnos">5</span>
+                    </div>
                     <div class="turno-jugador">
                         <div class="turno-nombre" id="nombreTurnoActual">Jugador</div>
                     </div>
@@ -174,26 +203,28 @@
                 </div>
                 <div class="button-group">
                     <button id="btnSiguienteTurno" onclick="siguienteTurno()">Siguiente →</button>
-                    <button id="btnEmpezarVotacion" onclick="empezarVotacion()" style="display: none;">🗳️ Empezar Votación</button>
+                    <button id="btnEmpezarVotacion" onclick="empezarVotacion()" style="display: none;">🗳️ Empezar
+                        Votación</button>
                 </div>
             </div>
             <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄 Volver a Jugar</button>
+                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
+                    Volver a Jugar</button>
             </div>
             <div class="config-section" style="margin-top: 1rem; text-align: center;">
                 <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
             </div>
         </div>
 
-        <!-- Paso 8: Votación -->
-        <div id="paso8" class="paso-config">
+        <!-- Paso 7: Votación -->
+        <div id="paso7" class="paso-config">
             <div class="config-section">
                 <h2>⚖️ Fase de Votación</h2>
                 <h3>Vota para eliminar a un jugador</h3>
                 <p class="tematicas-instruccion">Haz clic en el jugador que deseas eliminar</p>
-                
+
                 <div id="jugadoresVotacion" class="votacion-grid"></div>
-                
+
                 <div id="resultadoVotacion" class="resultado-votacion" style="display: none;">
                     <div class="resultado-card">
                         <h3 id="jugadorEliminado">Jugador eliminado</h3>
@@ -212,21 +243,23 @@
                 </div>
             </div>
             <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄 Volver a Jugar</button>
+                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
+                    Volver a Jugar</button>
             </div>
             <div class="config-section" style="margin-top: 1rem; text-align: center;">
                 <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
             </div>
         </div>
 
-        <!-- Paso 9: Resultado Final -->
-        <div id="paso9" class="paso-config">
+        <!-- Paso 8: Resultado Final -->
+        <div id="paso8" class="paso-config">
             <div class="config-section">
                 <h2 id="tituloResultado">🎉 Resultado Final</h2>
                 <div id="contenidoResultado" class="resultado-final"></div>
-                
+
                 <div class="button-group">
-                    <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄 Volver a Jugar</button>
+                    <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
+                        Volver a Jugar</button>
                     <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
                 </div>
             </div>
@@ -235,4 +268,5 @@
 
     <script src="src/js/game.js"></script>
 </body>
+
 </html>

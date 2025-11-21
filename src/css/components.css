@@ -559,6 +559,19 @@ input[type="range"]::-moz-range-thumb:hover {
     flex-direction: column;
     align-items: center;
     gap: 2rem;
+    animation: slideInRight 0.5s ease;
+}
+
+.turno-jugador-header {
+    animation: slideInDown 0.5s ease;
+}
+
+.reveal-section.slide-out {
+    animation: slideOutLeft 0.4s ease forwards;
+}
+
+.turno-jugador-header.slide-out {
+    animation: slideOutUp 0.4s ease forwards;
 }
 
 .palabra-card {
@@ -763,17 +776,37 @@ input[type="range"]::-moz-range-thumb:hover {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: 250px;
+    max-height: 300px;
     overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+/* Estilos para la barra de scroll */
+.lista-participacion::-webkit-scrollbar {
+    width: 8px;
+}
+
+.lista-participacion::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.lista-participacion::-webkit-scrollbar-thumb {
+    background: #e94560;
+    border-radius: 10px;
+}
+
+.lista-participacion::-webkit-scrollbar-thumb:hover {
+    background: #ff5b70;
 }
 
 .participacion-item {
     background: rgba(255, 255, 255, 0.05);
-    padding: 0.8rem 1.2rem;
-    border-radius: 10px;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
     transition: all 0.3s ease;
     border: 2px solid transparent;
 }
@@ -781,8 +814,7 @@ input[type="range"]::-moz-range-thumb:hover {
 .participacion-item.activo {
     background: rgba(233, 69, 96, 0.2);
     border-color: #e94560;
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(233, 69, 96, 0.6);
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
 }
 
 .participacion-numero {
@@ -992,4 +1024,199 @@ input[type="range"]::-moz-range-thumb:hover {
 .seccion-resumen li:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateX(5px);
+}
+
+/* ===== POPUP TEMPORIZADOR ===== */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.popup-overlay.active {
+    display: flex;
+}
+
+.popup-content {
+    background: linear-gradient(135deg, #0f3460 0%, #1a4d7a 100%);
+    border: 3px solid #e94560;
+    border-radius: 25px;
+    padding: 2.5rem;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(233, 69, 96, 0.4);
+    animation: popupBounce 0.4s ease;
+}
+
+.popup-content h3 {
+    font-size: 2rem;
+    color: #e94560;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 15px rgba(233, 69, 96, 0.6);
+}
+
+.temporizador-display {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    border: 2px solid rgba(233, 69, 96, 0.3);
+}
+
+.contador-numero {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #e94560;
+    text-shadow: 0 0 30px rgba(233, 69, 96, 1);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.mensaje-temporizador {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 1rem 0;
+}
+
+.popup-content .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.popup-content button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    background: #0f3460 !important;
+    background-color: #0f3460 !important;
+    border: 2px solid #e94560;
+    border-radius: 15px;
+    color: #ffffff !important;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+    min-height: 44px;
+}
+
+.popup-content button:hover {
+    background: #e94560 !important;
+    background-color: #e94560 !important;
+    box-shadow: 0 0 25px rgba(233, 69, 96, 0.8);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.popup-content button:active {
+    transform: scale(0.98);
+    background: #c93a4e !important;
+    background-color: #c93a4e !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popupBounce {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutLeft {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+@media (max-width: 768px) {
+    .popup-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .popup-content h3 {
+        font-size: 1.6rem;
+    }
+    
+    .contador-numero {
+        font-size: 4rem;
+    }
+    
+    .mensaje-temporizador {
+        font-size: 1rem;
+    }
 }
