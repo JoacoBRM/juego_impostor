@@ -122,6 +122,10 @@
 
         <!-- Paso 4: Mostrar palabras a jugadores -->
         <div id="paso4" class="paso-config">
+            <h2>Configuración del Juego</h2>
+            <div class="config-section">
+                <h3>Paso 4: Revelar Palabras</h3>
+            </div>
             <h2 id="turnoJugador" class="turno-jugador-header">Turno de Jugador</h2>
             <div id="contenedorReveal" class="config-section reveal-section">
                 <div class="palabra-card">
@@ -159,9 +163,10 @@
 
         <!-- Paso 5: Ruleta de orden -->
         <div id="paso5" class="paso-config">
-            <h2>Estableciendo el orden de participación</h2>
+            <h2>Configuración del Juego</h2>
             <div class="config-section">
-                <h3>Ruleta de Jugadores</h3>
+                <h3>Paso 5: Orden de Participación</h3>
+                <h4>Ruleta de Jugadores</h4>
                 <p class="tematicas-instruccion">La ruleta seleccionará el orden en que participarán</p>
                 <div class="ruleta-container">
                     <div class="ruleta-display">
@@ -187,9 +192,11 @@
 
         <!-- Paso 6: Indicador de turnos -->
         <div id="paso6" class="paso-config">
+            <h2>Juego en Progreso</h2>
             <div class="config-section">
-                <h2>Ronda <span id="rondaActual">1</span> de 2</h2>
-                <h3>Turno actual</h3>
+                <h3>Paso 6: Turnos de Participación</h3>
+                <h4>Ronda <span id="rondaActual">1</span> de 2</h4>
+                <p class="tematicas-instruccion">Turno actual:</p>
                 <div class="turno-display">
                     <div class="turno-numero">Turno <span id="numeroTurno">1</span> de <span id="totalTurnos">5</span>
                     </div>
@@ -218,11 +225,10 @@
 
         <!-- Paso 7: Votación -->
         <div id="paso7" class="paso-config">
+            <h2>Votación</h2>
             <div class="config-section">
-                <h2>⚖️ Fase de Votación</h2>
-                <h3>Vota para eliminar a un jugador</h3>
-                <p class="tematicas-instruccion">Haz clic en el jugador que deseas eliminar</p>
-
+                <h3>Paso 7: Fase de Votación ⚖️</h3>
+                <p class="tematicas-instruccion">Vota para eliminar a un jugador</p>
                 <div id="jugadoresVotacion" class="votacion-grid"></div>
 
                 <div id="resultadoVotacion" class="resultado-votacion" style="display: none;">
@@ -253,8 +259,10 @@
 
         <!-- Paso 8: Resultado Final -->
         <div id="paso8" class="paso-config">
+            <h2>Resultado Final</h2>
             <div class="config-section">
-                <h2 id="tituloResultado">🎉 Resultado Final</h2>
+                <h3>Paso 8: Fin del Juego 🎉</h3>
+                <h4 id="tituloResultado">Resultado Final</h4>
                 <div id="contenidoResultado" class="resultado-final"></div>
 
                 <div class="button-group">
