@@ -237,7 +237,12 @@ function crearTarjetasTematicas() {
             'Cosas': '💡',
             'Comida Rápida': '🍕',
             'Comida rapida': '🍔',
-            'Ecuatorianos': '🇪🇨'
+            'Ecuatorianos': '🇪🇨',
+            'Superhéroes': '🦸',
+            'Videojuegos': '🎮',
+            'Películas': '🎬',
+            'Música': '🎵',
+            'Medios de Transporte': '🚗'
         };
         const emoji = emojis[categoria.category] || '📋';
 
