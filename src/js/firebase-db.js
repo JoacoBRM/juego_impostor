@@ -101,64 +101,6 @@ async function eliminarCategoria(categoriaId) {
 }
 
 /**
- * Guarda las estadísticas de una partida
- * @param {Object} estadisticas - Datos de la partida
- * @returns {Promise<string>} ID del documento creado
- */
-async function guardarEstadisticasPartida(estadisticas) {
-  try {
-    if (!window.firebaseDB) {
-      throw new Error('Firebase no está inicializado');
-    }
-
-    const docRef = await window.firebaseDB
-      .collection('partidas')
-      .add({
-        ...estadisticas,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-    console.log('Estadísticas guardadas con ID:', docRef.id);
-    return docRef.id;
-  } catch (error) {
-    console.error('Error al guardar estadísticas:', error);
-    throw error;
-  }
-}
-
-/**
- * Obtiene las últimas partidas jugadas
- * @param {number} limite - Número máximo de partidas a obtener
- * @returns {Promise<Array>} Array con las partidas
- */
-async function obtenerUltimasPartidas(limite = 10) {
-  try {
-    if (!window.firebaseDB) {
-      throw new Error('Firebase no está inicializado');
-    }
-
-    const partidasSnapshot = await window.firebaseDB
-      .collection('partidas')
-      .orderBy('timestamp', 'desc')
-      .limit(limite)
-      .get();
-
-    const partidas = [];
-    partidasSnapshot.forEach((doc) => {
-      partidas.push({
-        id: doc.id,
-        ...doc.data()
-      });
-    });
-
-    return partidas;
-  } catch (error) {
-    console.error('Error al obtener partidas:', error);
-    throw error;
-  }
-}
-
-/**
  * Migra datos desde el JSON local a Firebase
  * Esta función es útil para la primera carga de datos
  * @param {Array} categoriasJSON - Array con las categorías del JSON

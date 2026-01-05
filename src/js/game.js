@@ -507,24 +507,6 @@ function siguienteJugador() {
 // Empezar el juego - ir a la ruleta
 function empezarJuego() {
     console.log('¡El juego ha comenzado!');
-
-    // Guardar estadísticas de la partida en Firebase (opcional)
-    if (usarFirebase && window.FirebaseDB) {
-        const estadisticas = {
-            numJugadores: numJugadores,
-            nombresJugadores: nombresJugadores,
-            numImpostores: numImpostores,
-            tematicasSeleccionadas: tematicasSeleccionadas,
-            palabraSeleccionada: palabraSeleccionada,
-            pistaSeleccionada: pistaSeleccionada,
-            incluirPistas: incluirPistas
-        };
-
-        window.FirebaseDB.guardarEstadisticasPartida(estadisticas)
-            .then((id) => console.log('Partida guardada con ID:', id))
-            .catch((error) => console.error('Error al guardar partida:', error));
-    }
-
     // Inicializar ruleta
     inicializarRuleta();
     mostrarPaso(5);
