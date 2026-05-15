@@ -9,7 +9,6 @@ let jugadorActualIndex = 0;
 let palabraVisible = false;
 let incluirPistas = true;
 let numImpostores = 1;
-let usarFirebase = true; // Cambiar a false para usar el JSON local
 
 // Variables para la ruleta y orden de participación
 let ordenParticipacion = [];
@@ -28,38 +27,13 @@ let juegoTerminado = false;
 let intervaloTemporizador = null;
 let tiempoRestante = 5;
 
-// Cargar categorías desde Firebase o JSON local
-async function cargarCategorias() {
-    try {
-        if (usarFirebase && window.FirebaseDB) {
-            // Intentar cargar desde Firebase
-            console.log('Cargando categorías desde Firebase...');
-            categorias = await window.FirebaseDB.cargarCategoriasDesdeFirebase();
-
-            // Si Firebase no tiene datos, cargar desde JSON y migrar
-            if (categorias.length === 0) {
-                console.log('No hay categorías en Firebase, cargando desde JSON local...');
-                await cargarDesdeJSON();
-            }
-        } else {
-            // Cargar desde JSON local
-            await cargarDesdeJSON();
-        }
-    } catch (error) {
-        console.error('Error al cargar las categorías desde Firebase:', error);
-        console.log('Intentando cargar desde JSON local como respaldo...');
-        await cargarDesdeJSON();
-    }
-}
-
 // Cargar categorías desde el JSON local
-async function cargarDesdeJSON() {
+async function cargarCategorias() {
     try {
         const response = await fetch('src/data/game_data.json');
         categorias = await response.json();
-        console.log(`${categorias.length} categorías cargadas desde JSON local`);
     } catch (error) {
-        console.error('Error al cargar las categorías desde JSON:', error);
+        console.error('Error al cargar las categorías:', error);
         categorias = [];
     }
 }
