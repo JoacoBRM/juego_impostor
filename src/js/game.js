@@ -9,13 +9,10 @@ let jugadorActualIndex = 0;
 let palabraVisible = false;
 let incluirPistas = true;
 let numImpostores = 1;
+let palabraPersonalizada = '';
 
 // Variables para la ruleta y orden de participación
 let ordenParticipacion = [];
-let jugadoresRestantes = [];
-let turnoActual = 0;
-let rondaActual = 1;
-const TOTAL_RONDAS = 2;
 let ruletaGirando = false;
 
 // Variables para el sistema de votación
@@ -92,7 +89,8 @@ function mostrarPaso(numPaso) {
 function irAPaso2() {
     numJugadores = parseInt(document.getElementById('numJugadores').value);
 
-    // Generar campos de entrada para los nombres
+    const savedNames = JSON.parse(localStorage.getItem('impostor_nombres') || '[]');
+
     const container = document.getElementById('nombresContainer');
     container.innerHTML = '';
 
@@ -101,7 +99,7 @@ function irAPaso2() {
         div.className = 'nombre-input-group';
         div.innerHTML = `
             <label for="jugador${i}">Jugador ${i}:</label>
-            <input type="text" id="jugador${i}" placeholder="Nombre del jugador ${i}" value="${nombresJugadores[i - 1] || ''}">
+            <input type="text" id="jugador${i}" placeholder="Nombre del jugador ${i}" value="${savedNames[i - 1] || nombresJugadores[i - 1] || ''}">
         `;
         container.appendChild(div);
     }
@@ -120,13 +118,10 @@ async function irAPaso3() {
 
     for (let i = 1; i <= numJugadores; i++) {
         const nombre = document.getElementById(`jugador${i}`).value.trim();
-        // Si el nombre está vacío, usar nombre predeterminado
-        if (nombre === '') {
-            nombresJugadores.push(`Jugador ${i}`);
-        } else {
-            nombresJugadores.push(nombre);
-        }
+        nombresJugadores.push(nombre === '' ? `Jugador ${i}` : nombre);
     }
+
+    localStorage.setItem('impostor_nombres', JSON.stringify(nombresJugadores));
 
     // Cargar categorías si no se han cargado
     if (categorias.length === 0) {
@@ -248,8 +243,10 @@ function toggleTematica(category, card) {
 
 // Iniciar el juego
 function iniciarJuego() {
-    if (tematicasSeleccionadas.length === 0) {
-        alert('Por favor selecciona al menos una temática');
+    palabraPersonalizada = document.getElementById('inputPalabraPersonalizada').value.trim();
+
+    if (tematicasSeleccionadas.length === 0 && palabraPersonalizada === '') {
+        alert('Por favor selecciona al menos una temática o escribe una palabra personalizada');
         return;
     }
 
@@ -273,11 +270,6 @@ function iniciarJuego() {
     jugadorActualIndex = 0;
     palabraVisible = false;
 
-    console.log('Palabra seleccionada:', palabraSeleccionada);
-    console.log('Pista seleccionada:', pistaSeleccionada);
-    console.log('Impostores:', impostoresIndices.map(i => nombresJugadores[i]));
-    console.log('Incluir pistas:', incluirPistas);
-
     // Mostrar el primer jugador
     mostrarTurnoJugador();
     mostrarPaso(4);
@@ -297,19 +289,21 @@ function seleccionarImpostores() {
 
 // Seleccionar una palabra aleatoria de las categorías seleccionadas
 function seleccionarPalabraAleatoria() {
+    if (palabraPersonalizada !== '') {
+        palabraSeleccionada = palabraPersonalizada;
+        pistaSeleccionada = '';
+        return;
+    }
+
     let categoriasDisponibles;
 
-    // --- INICIO DEL CAMBIO ---
-    // Si se seleccionó "Aleatorio", usamos TODAS las categorías
     if (tematicasSeleccionadas.includes('Aleatorio')) {
         categoriasDisponibles = categorias;
     } else {
-        // Si no, usamos solo las seleccionadas (comportamiento original)
         categoriasDisponibles = categorias.filter(cat =>
             tematicasSeleccionadas.includes(cat.category)
         );
     }
-    // --- FIN DEL CAMBIO ---
 
     // Validación de seguridad (por si acaso)
     if (categoriasDisponibles.length === 0) {
@@ -336,11 +330,11 @@ function seleccionarPalabraAleatoria() {
                 Math.floor(Math.random() * palabraObj.clues.length)
             ];
         } else {
-            pistaSeleccionada = 'Sin pista disponible';
+            pistaSeleccionada = '';
         }
     } else {
         palabraSeleccionada = palabraObj;
-        pistaSeleccionada = 'Sin pista disponible';
+        pistaSeleccionada = '';
     }
 }
 
@@ -375,13 +369,17 @@ function togglePalabra() {
         const esImpostor = impostoresIndices.includes(jugadorActualIndex);
 
         if (esImpostor) {
-            if (incluirPistas) {
-                contenido.innerHTML = `<div class="impostor-header">IMPOSTOR</div><div class="pista-texto">Pista: ${pistaSeleccionada}</div>`;
-                contenido.className = 'palabra-impostor-con-pista';
-            } else {
-                contenido.textContent = 'IMPOSTOR';
-                contenido.className = 'palabra-impostor';
-            }
+            const complices = impostoresIndices
+                .filter(i => i !== jugadorActualIndex)
+                .map(i => nombresJugadores[i]);
+            const complicePart = complices.length > 0
+                ? `<div class="complice-texto">Cómplices: ${complices.join(', ')}</div>`
+                : '';
+            const pistaPart = (incluirPistas && pistaSeleccionada)
+                ? `<div class="pista-texto">Pista: ${pistaSeleccionada}</div>`
+                : '';
+            contenido.innerHTML = `<div class="impostor-header">IMPOSTOR</div>${complicePart}${pistaPart}`;
+            contenido.className = 'palabra-impostor-con-pista';
         } else {
             contenido.textContent = palabraSeleccionada;
             contenido.className = 'palabra-visible';
@@ -496,8 +494,7 @@ function volverAlInicio() {
 // Inicializar la ruleta
 function inicializarRuleta() {
     ordenParticipacion = [];
-    jugadoresRestantes = [...Array(numJugadores).keys()]; // [0, 1, 2, ...]
-    ruletaGirando = false; // Resetear estado de la ruleta
+    ruletaGirando = false;
     document.getElementById('listaOrden').innerHTML = '';
     document.getElementById('ruletaNombre').textContent = '?';
     document.getElementById('btnGirarRuleta').style.display = 'inline-block';
@@ -571,7 +568,7 @@ function generarOrdenCompleto() {
     setTimeout(() => {
         display.classList.remove('seleccionado');
     }, 1500);
-}// En src/js/game.js
+}
 
 // Actualizar la lista visual del orden
 function actualizarListaOrden() {
@@ -588,83 +585,13 @@ function actualizarListaOrden() {
 
 // Continuar al juego después de la ruleta
 function continuarAlJuego() {
-    turnoActual = 0;
-    rondaActual = 1;
-
-    // Inicializar jugadores vivos (todos al inicio)
     jugadoresVivos = Array.from({ length: numJugadores }, (_, i) => i);
     jugadoresEliminados = [];
     juegoTerminado = false;
 
-    mostrarTurnoActual();
-    mostrarPaso(6);
+    empezarVotacion();
 }
 
-// Mostrar el turno actual
-function mostrarTurnoActual() {
-    const jugadorIndex = ordenParticipacion[turnoActual];
-    document.getElementById('nombreTurnoActual').textContent = nombresJugadores[jugadorIndex];
-    document.getElementById('numeroTurno').textContent = turnoActual + 1;
-    // Usar el número de jugadores vivos en lugar del total
-    const totalJugadoresActivos = ordenParticipacion.length;
-    document.getElementById('totalTurnos').textContent = totalJugadoresActivos;
-    document.getElementById('rondaActual').textContent = rondaActual;
-
-    // Actualizar lista de participación con el turno actual resaltado
-    actualizarListaParticipacion();
-
-    // Mostrar/ocultar botones según el estado
-    if (rondaActual >= TOTAL_RONDAS && turnoActual >= totalJugadoresActivos - 1) {
-        document.getElementById('btnSiguienteTurno').style.display = 'none';
-        document.getElementById('btnEmpezarVotacion').style.display = 'inline-block';
-    } else {
-        document.getElementById('btnSiguienteTurno').style.display = 'inline-block';
-        document.getElementById('btnEmpezarVotacion').style.display = 'none';
-    }
-}
-
-// Actualizar la lista de participación con indicador del turno actual
-function actualizarListaParticipacion() {
-    const lista = document.getElementById('ordenParticipacion');
-    lista.innerHTML = '';
-
-    ordenParticipacion.forEach((jugadorIndex, posicion) => {
-        const item = document.createElement('div');
-        item.className = 'participacion-item';
-        if (posicion === turnoActual) {
-            item.classList.add('activo');
-        }
-        item.innerHTML = `<span class="participacion-numero">${posicion + 1}.</span> <span class="participacion-nombre">${nombresJugadores[jugadorIndex]}</span>`;
-        lista.appendChild(item);
-    });
-}
-
-// Siguiente turno
-function siguienteTurno() {
-    turnoActual++;
-
-    const totalJugadoresActivos = ordenParticipacion.length;
-
-    if (turnoActual >= totalJugadoresActivos) {
-        // Termina la ronda
-        turnoActual = 0;
-        rondaActual++;
-
-        if (rondaActual <= TOTAL_RONDAS) {
-            // Mostrar que comienza nueva ronda
-            mostrarTurnoActual();
-        }
-    } else {
-        mostrarTurnoActual();
-    }
-}
-
-// Finalizar el juego
-function finalizarJuego() {
-    if (confirm('¿Deseas volver al inicio?')) {
-        volverAlInicio();
-    }
-}
 
 // Volver a jugar manteniendo jugadores y nombres
 function volverAJugar() {
@@ -683,19 +610,21 @@ function volverAJugar() {
     palabraVisible = false;
     palabraSeleccionada = '';
     pistaSeleccionada = '';
+    palabraPersonalizada = '';
     impostoresIndices = [];
 
     // Resetear variables de votación
     jugadoresVivos = [];
     jugadoresEliminados = [];
     juegoTerminado = false;
-    turnoActual = 0;
-    rondaActual = 1;
-    
+
     // Resetear variables de ruleta
     ordenParticipacion = [];
-    jugadoresRestantes = [];
     ruletaGirando = false;
+
+    // Limpiar input de palabra personalizada
+    const inputPP = document.getElementById('inputPalabraPersonalizada');
+    if (inputPP) inputPP.value = '';
 
     // Cerrar popup si está abierto
     const popup = document.getElementById('popupTemporizador');
@@ -863,12 +792,12 @@ function verificarEstadoJuego() {
     estadoDiv.innerHTML = `
         <div class="juego-continua">
             <p style="font-size: 1.2rem; margin-top: 1rem;">
-                <strong>Impostores vivos:</strong> ${impostoresVivos} 
+                <strong>Impostores vivos:</strong> ${impostoresVivos}
                 <span style="margin: 0 1rem;">|</span>
                 <strong>Inocentes vivos:</strong> ${inocentesVivos}
             </p>
             <p style="font-size: 1rem; margin-top: 0.5rem; color: rgba(255, 255, 255, 0.8);">
-                El juego continúa. ¿Qué desean hacer?
+                El juego continúa.
             </p>
         </div>
     `;
@@ -880,20 +809,6 @@ function verificarEstadoJuego() {
 function continuarVotacion() {
     document.getElementById('jugadoresVotacion').style.display = 'grid';
     mostrarJugadoresParaVotar();
-}
-
-// Iniciar ronda extra
-function iniciarRondaExtra() {
-    // Resetear turno actual
-    turnoActual = 0;
-    rondaActual++;
-
-    // Actualizar el orden de participación solo con jugadores vivos
-    ordenParticipacion = ordenParticipacion.filter(i => jugadoresVivos.includes(i));
-
-    // Volver al paso de turnos
-    mostrarTurnoActual();
-    mostrarPaso(6);
 }
 
 // Mostrar resultado final

@@ -587,7 +587,8 @@ input[type="range"]::-moz-range-thumb:hover {
 .palabra-card {
     width: 100%;
     max-width: 400px;
-    height: 250px;
+    min-height: 200px;
+    height: auto;
     background: linear-gradient(135deg, rgba(13, 9, 33, 0.9), rgba(30, 10, 78, 0.7));
     border: 3px solid rgba(255, 45, 85, 0.5);
     border-radius: 20px;
@@ -644,6 +645,17 @@ input[type="range"]::-moz-range-thumb:hover {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     text-align: center;
     line-height: 1.6;
+}
+
+.complice-texto {
+    font-size: 1.1rem;
+    color: #f59e0b;
+    text-align: center;
+    font-weight: 600;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
 }
 
 /* ===== RULETA ===== */
