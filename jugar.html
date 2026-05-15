@@ -10,10 +10,11 @@
     <meta name="apple-mobile-web-app-title" content="Impostor">
     <meta name="format-detection" content="telephone=no">
     <title>Jugar - Impostor</title>
-    <link rel="apple-touch-icon" href="assets/images/logo_impostor.png">
+    <link rel="icon" type="image/jpeg" href="assets/images/logo_impostor.jpg">
+    <link rel="apple-touch-icon" href="assets/images/logo_impostor.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/css/base.css">
     <link rel="stylesheet" href="src/css/layout.css">
     <link rel="stylesheet" href="src/css/components.css">
@@ -24,10 +25,11 @@
     <div class="container">
         <!-- Paso 1: Número de jugadores -->
         <div id="paso1" class="paso-config active">
-            <h2>Configuración del Juego</h2>
+            <div class="paso-badge">Configuración · Paso 1 de 3</div>
+            <h2>¿Cuántos Jugadores?</h2>
             <div class="config-section">
-                <h3>Paso 1: Número de Jugadores</h3>
-                <label for="numJugadores">Seleccione el número de jugadores:</label>
+                <h3>Número de Jugadores</h3>
+                <label for="numJugadores">Selecciona cuántos van a jugar:</label>
                 <div class="slider-container">
                     <span class="slider-value" id="sliderValue">5</span>
                     <input type="range" id="numJugadores" min="3" max="10" value="5"
@@ -45,35 +47,37 @@
                 </div>
                 <p id="infoImpostores" class="info-impostores">Con 5 jugadores puedes usar hasta 1 impostor</p>
                 <div class="button-group">
-                    <button onclick="irAPaso2()">Siguiente</button>
+                    <button onclick="irAPaso2()">Siguiente →</button>
                 </div>
             </div>
-            <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+            <div class="paso-footer">
+                <button onclick="volverAlInicio()" class="btn-ghost">Volver al inicio</button>
             </div>
         </div>
 
         <!-- Paso 2: Nombres de jugadores -->
         <div id="paso2" class="paso-config">
-            <h2>Configuración del Juego</h2>
+            <div class="paso-badge">Configuración · Paso 2 de 3</div>
+            <h2>Nombres de los Jugadores</h2>
             <div class="config-section">
-                <h3>Paso 2: Nombres de los Jugadores</h3>
+                <h3>¿Cómo se llama cada uno?</h3>
                 <div id="nombresContainer"></div>
                 <div class="button-group">
-                    <button onclick="volverAPaso1()">Anterior</button>
-                    <button onclick="irAPaso3()">Siguiente</button>
+                    <button onclick="volverAPaso1()" class="btn-secondary">← Anterior</button>
+                    <button onclick="irAPaso3()">Siguiente →</button>
                 </div>
             </div>
-            <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+            <div class="paso-footer">
+                <button onclick="volverAlInicio()" class="btn-ghost">Volver al inicio</button>
             </div>
         </div>
 
-        <!-- Paso 3: Temáticas (placeholder) -->
+        <!-- Paso 3: Temáticas -->
         <div id="paso3" class="paso-config">
-            <h2>Configuración del Juego</h2>
+            <div class="paso-badge">Configuración · Paso 3 de 3</div>
+            <h2>Elige las Temáticas</h2>
             <div class="config-section">
-                <h3>Paso 3: Selecciona las Temáticas</h3>
+                <h3>Categorías del juego</h3>
                 <p class="tematicas-instruccion">Elige las categorías que quieres incluir en el juego:</p>
                 <div id="tematicasContainer" class="tematicas-grid"></div>
 
@@ -101,21 +105,18 @@
                 </div>
 
                 <div class="button-group">
-                    <button onclick="volverAPaso2()">Anterior</button>
+                    <button onclick="volverAPaso2()" class="btn-secondary">← Anterior</button>
                     <button onclick="iniciarJuego()">Iniciar Juego</button>
                 </div>
             </div>
-            <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+            <div class="paso-footer">
+                <button onclick="volverAlInicio()" class="btn-ghost">Volver al inicio</button>
             </div>
         </div>
 
         <!-- Paso 4: Mostrar palabras a jugadores -->
         <div id="paso4" class="paso-config">
-            <h2>Configuración del Juego</h2>
-            <div class="config-section">
-                <h3>Paso 4: Revelar Palabras</h3>
-            </div>
+            <div class="paso-badge">Revelar Palabras</div>
             <h2 id="turnoJugador" class="turno-jugador-header">Turno de Jugador</h2>
             <div id="contenedorReveal" class="config-section reveal-section">
                 <div class="palabra-card">
@@ -127,7 +128,7 @@
                     </button>
                 </div>
             </div>
-            
+
             <!-- Popup del temporizador -->
             <div id="popupTemporizador" class="popup-overlay">
                 <div class="popup-content">
@@ -137,27 +138,24 @@
                     </div>
                     <p class="mensaje-temporizador">Preparando siguiente jugador...</p>
                     <div class="button-group">
-                        <button onclick="volverAVerPalabra()">👁️ Volver a ver palabra</button>
+                        <button onclick="volverAVerPalabra()">👁️ Volver a ver</button>
                         <button onclick="saltarTemporizador()">Siguiente →</button>
                     </div>
                 </div>
             </div>
-            <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
-                    Volver a empezar</button>
-            </div>
-            <div class="config-section" style="margin-top: 1rem; text-align: center;">
-                <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+            <div class="paso-footer">
+                <button onclick="volverAJugar()" class="btn-ghost">Reiniciar partida</button>
+                <span class="paso-footer-sep">·</span>
+                <button onclick="volverAlInicio()" class="btn-ghost">Inicio</button>
             </div>
         </div>
 
         <!-- Paso 5: Ruleta de orden -->
         <div id="paso5" class="paso-config">
-            <h2>Configuración del Juego</h2>
+            <h2>Orden de Juego</h2>
             <div class="config-section">
-                <h3>Paso 5: Orden de Participación</h3>
-                <h4>Ruleta de Jugadores</h4>
-                <p class="tematicas-instruccion">La ruleta seleccionará el orden en que participarán</p>
+                <h3>Ruleta de Jugadores</h3>
+                <p class="tematicas-instruccion">La ruleta define el orden en que participarán</p>
                 <div class="ruleta-container">
                     <div class="ruleta-display">
                         <div id="ruletaFlecha" class="ruleta-flecha">▼</div>
@@ -166,17 +164,14 @@
                     <div id="listaOrden" class="lista-orden"></div>
                 </div>
                 <div class="button-group">
-                    <button id="btnGirarRuleta" onclick="girarRuleta()">🎲 Girar Ruleta</button>
-                    <button id="btnContinuarJuego" onclick="continuarAlJuego()" style="display: none;">Continuar al
-                        Juego</button>
+                    <button id="btnGirarRuleta" onclick="girarRuleta()">Girar Ruleta</button>
+                    <button id="btnContinuarJuego" onclick="continuarAlJuego()" style="display: none;">Continuar →</button>
                 </div>
             </div>
-            <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
-                    Volver a empezar</button>
-            </div>
-            <div class="config-section" style="margin-top: 1rem; text-align: center;">
-                <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+            <div class="paso-footer">
+                <button onclick="volverAJugar()" class="btn-ghost">Reiniciar partida</button>
+                <span class="paso-footer-sep">·</span>
+                <button onclick="volverAlInicio()" class="btn-ghost">Inicio</button>
             </div>
         </div>
 
@@ -184,12 +179,10 @@
         <div id="paso6" class="paso-config">
             <h2>Juego en Progreso</h2>
             <div class="config-section">
-                <h3>Paso 6: Turnos de Participación</h3>
-                <h4>Ronda <span id="rondaActual">1</span> de 2</h4>
+                <h3>Ronda <span id="rondaActual">1</span> de 2</h3>
                 <p class="tematicas-instruccion">Turno actual:</p>
                 <div class="turno-display">
-                    <div class="turno-numero">Turno <span id="numeroTurno">1</span> de <span id="totalTurnos">5</span>
-                    </div>
+                    <div class="turno-numero">Turno <span id="numeroTurno">1</span> de <span id="totalTurnos">5</span></div>
                     <div class="turno-jugador">
                         <div class="turno-nombre" id="nombreTurnoActual">Jugador</div>
                     </div>
@@ -200,16 +193,13 @@
                 </div>
                 <div class="button-group">
                     <button id="btnSiguienteTurno" onclick="siguienteTurno()">Siguiente →</button>
-                    <button id="btnEmpezarVotacion" onclick="empezarVotacion()" style="display: none;">🗳️ Empezar
-                        Votación</button>
+                    <button id="btnEmpezarVotacion" onclick="empezarVotacion()" style="display: none;">🗳️ Votar</button>
                 </div>
             </div>
-            <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
-                    Volver a Jugar</button>
-            </div>
-            <div class="config-section" style="margin-top: 1rem; text-align: center;">
-                <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+            <div class="paso-footer">
+                <button onclick="volverAJugar()" class="btn-ghost">Reiniciar partida</button>
+                <span class="paso-footer-sep">·</span>
+                <button onclick="volverAlInicio()" class="btn-ghost">Inicio</button>
             </div>
         </div>
 
@@ -217,7 +207,7 @@
         <div id="paso7" class="paso-config">
             <h2>Votación</h2>
             <div class="config-section">
-                <h3>Paso 7: Fase de Votación ⚖️</h3>
+                <h3>Fase de Votación ⚖️</h3>
                 <p class="tematicas-instruccion">Vota para eliminar a un jugador</p>
                 <div id="jugadoresVotacion" class="votacion-grid"></div>
 
@@ -230,7 +220,7 @@
                 </div>
 
                 <div id="botonesVotacion" class="button-group" style="display: none;">
-                    <button id="btnRondaExtra" onclick="iniciarRondaExtra()">🔄 Ronda Extra</button>
+                    <button id="btnRondaExtra" onclick="iniciarRondaExtra()">Ronda Extra</button>
                     <button id="btnSeguirVotando" onclick="continuarVotacion()">🗳️ Seguir Votando</button>
                 </div>
 
@@ -238,28 +228,26 @@
                     <button onclick="mostrarResultadoFinal()">Ver Resultado Final</button>
                 </div>
             </div>
-            <div class="config-section" style="margin-top: 2rem; text-align: center;">
-                <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
-                    Volver a Jugar</button>
-            </div>
-            <div class="config-section" style="margin-top: 1rem; text-align: center;">
-                <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+            <div class="paso-footer">
+                <button onclick="volverAJugar()" class="btn-ghost">Reiniciar partida</button>
+                <span class="paso-footer-sep">·</span>
+                <button onclick="volverAlInicio()" class="btn-ghost">Inicio</button>
             </div>
         </div>
 
         <!-- Paso 8: Resultado Final -->
         <div id="paso8" class="paso-config">
-            <h2>Resultado Final</h2>
+            <h2>Fin del Juego</h2>
             <div class="config-section">
-                <h3>Paso 8: Fin del Juego 🎉</h3>
-                <h4 id="tituloResultado">Resultado Final</h4>
+                <h3 id="tituloResultado">Resultado Final</h3>
                 <div id="contenidoResultado" class="resultado-final"></div>
 
                 <div class="button-group">
-                    <button onclick="volverAJugar()" style="background: #0f3460 !important; border-color: #e94560;">🔄
-                        Volver a Jugar</button>
-                    <button onclick="volverAlInicio()" class="btn-secondary">🏠 Volver a la página principal</button>
+                    <button onclick="volverAJugar()">Jugar de nuevo</button>
                 </div>
+            </div>
+            <div class="paso-footer">
+                <button onclick="volverAlInicio()" class="btn-ghost">Volver al inicio</button>
             </div>
         </div>
     </div>

@@ -88,9 +88,9 @@ function addTitleGlow() {
     if (title) {
         setInterval(() => {
             title.style.textShadow = `
-                0 0 10px rgba(233, 69, 96, ${Math.random() * 0.5 + 0.5}),
-                0 0 20px rgba(233, 69, 96, ${Math.random() * 0.3 + 0.3}),
-                0 0 30px rgba(233, 69, 96, ${Math.random() * 0.2 + 0.2}),
+                0 0 10px rgba(255, 45, 85, ${Math.random() * 0.5 + 0.5}),
+                0 0 20px rgba(255, 45, 85, ${Math.random() * 0.3 + 0.3}),
+                0 0 30px rgba(255, 45, 85, ${Math.random() * 0.2 + 0.2}),
                 3px 3px 6px rgba(0, 0, 0, 0.5)
             `;
         }, 100);

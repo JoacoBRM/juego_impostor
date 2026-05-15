@@ -806,7 +806,7 @@ function mostrarResultadoVotacion(jugadorIndex, esImpostor) {
         rolDiv.innerHTML = `
             <div class="rol-impostor">
                 <span style="font-size: 3rem;">🎭</span>
-                <p style="font-size: 1.5rem; color: #e94560; font-weight: bold;">¡ERA UN IMPOSTOR!</p>
+                <p style="font-size: 1.5rem; color: #ff2d55; font-weight: bold;">¡ERA UN IMPOSTOR!</p>
             </div>
         `;
     } else {
@@ -849,7 +849,7 @@ function verificarEstadoJuego() {
     if (impostoresVivos >= inocentesVivos) {
         estadoDiv.innerHTML = `
             <div class="derrota">
-                <h2 style="color: #e94560; font-size: 2rem;">💀 ¡DERROTA!</h2>
+                <h2 style="color: #ff2d55; font-size: 2rem;">💀 ¡DERROTA!</h2>
                 <p style="font-size: 1.3rem;">Los impostores han ganado</p>
                 <p style="font-size: 1.1rem; margin-top: 1rem;">Los impostores son iguales o más que los inocentes</p>
             </div>
@@ -908,13 +908,13 @@ function mostrarResultadoFinal() {
         titulo.style.color = '#4ecdc4';
     } else {
         titulo.textContent = '💀 ¡Victoria de los Impostores!';
-        titulo.style.color = '#e94560';
+        titulo.style.color = '#ff2d55';
     }
 
     let html = '<div class="resumen-final">';
 
     // Mostrar impostores
-    html += '<div class="seccion-resumen"><h3 style="color: #e94560;">🎭 Impostores:</h3><ul>';
+    html += '<div class="seccion-resumen"><h3 style="color: #ff2d55;">🎭 Impostores:</h3><ul>';
     impostoresIndices.forEach(i => {
         const estado = jugadoresVivos.includes(i) ? '✅ Sobrevivió' : '❌ Eliminado';
         html += `<li>${nombresJugadores[i]} - ${estado}</li>`;

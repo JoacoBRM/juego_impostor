@@ -13,7 +13,11 @@ header h1 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #ff2d55, #ff6b35);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.03em;
 }
 
 nav ul {
@@ -53,20 +57,20 @@ main {
 }
 
 section {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 2.5rem;
     margin-bottom: 2rem;
-    border: 1px solid rgba(233, 69, 96, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 45, 85, 0.15);
+    box-shadow: 0 8px 32px rgba(13, 9, 33, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     transition: transform 0.3s ease;
     overflow: hidden;
 }
 
 section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 42px rgba(13, 9, 33, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 section ul li {
@@ -87,7 +91,7 @@ section ul li::before {
 }
 
 section ul li:hover {
-    background: rgba(233, 69, 96, 0.15);
+    background: rgba(255, 45, 85, 0.12);
     transform: translateX(10px);
     padding-left: 2.5rem;
 }

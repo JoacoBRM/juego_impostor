@@ -9,7 +9,10 @@
       "PowerShell(Get-ChildItem -Path \"d:\\\\juego_impostor\" -Recurse | Where-Object { $_.Extension -in @\\('.js', '.json', '.env'\\) } | Select-Object FullName)",
       "Bash(Get-ChildItem -Path \"d:\\\\juego_impostor\" -Recurse -File)",
       "Bash(Select-Object -ExpandProperty FullName)",
-      "Bash(mkdir \"d:\\\\juego_impostor\\\\src\\\\data\")"
+      "Bash(mkdir \"d:\\\\juego_impostor\\\\src\\\\data\")",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"d:\\\\juego_impostor\" -Force)",
+      "Bash(Select-Object Name, FullName)"
     ],
     "additionalDirectories": [
       "d:\\juego_impostor\\src"
